@@ -1,0 +1,79 @@
+-- =====================================================================
+--  Agencia de Superhéroes de Segunda — Esquema de la base de datos
+--  PostgreSQL 13+
+--
+--  Se ejecuta AUTOMÁTICAMENTE al arrancar el contenedor de PostgreSQL
+--  por primera vez (cuando el volumen de datos está vacío). Los ficheros
+--  de /docker-entrypoint-initdb.d se ejecutan por orden alfabético:
+--  primero 01-schema.sql y después 02-seed.sql.
+--
+--  Para volver a ejecutarlo:  docker compose down -v && docker compose up
+--
+--  ¡Atención! Borra las tablas si ya existen (se pierden los datos).
+-- =====================================================================
+
+DROP TABLE IF EXISTS hero_powers;
+DROP TABLE IF EXISTS heroes;
+DROP TABLE IF EXISTS powers;
+DROP TABLE IF EXISTS users;
+
+-- ---------------------------------------------------------------------
+--  users: personas registradas en la aplicación
+-- ---------------------------------------------------------------------
+CREATE TABLE users (
+    id          SERIAL       PRIMARY KEY,
+    username    VARCHAR(50)  NOT NULL UNIQUE,
+    email       VARCHAR(100) NOT NULL UNIQUE,
+    password    VARCHAR(255) NOT NULL,                -- hash de bcrypt, nunca texto plano
+    role        VARCHAR(10)  NOT NULL DEFAULT 'user'
+                CHECK (role IN ('admin', 'user')),
+    created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+-- ---------------------------------------------------------------------
+--  powers: catálogo de poderes (lo gestiona el admin)
+-- ---------------------------------------------------------------------
+CREATE TABLE powers (
+    id          SERIAL       PRIMARY KEY,
+    name        VARCHAR(80)  NOT NULL UNIQUE,
+    description TEXT,
+    created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+-- ---------------------------------------------------------------------
+--  heroes: identidades secretas creadas por los usuarios
+--  Relación 1:N  ->  un usuario crea muchos héroes
+-- ---------------------------------------------------------------------
+CREATE TABLE heroes (
+    id            SERIAL       PRIMARY KEY,
+    name          VARCHAR(80)  NOT NULL UNIQUE,
+    description   TEXT,
+    utility_level SMALLINT     NOT NULL DEFAULT 5
+                  CHECK (utility_level BETWEEN 1 AND 10),
+    user_id       INTEGER      NOT NULL
+                  REFERENCES users(id) ON DELETE CASCADE,
+    created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_heroes_user_id ON heroes(user_id);
+
+-- ---------------------------------------------------------------------
+--  hero_powers: tabla intermedia
+--  Relación N:M  ->  un héroe tiene muchos poderes
+--                    y un poder lo tienen muchos héroes
+--  La clave primaria compuesta impide asignar dos veces el mismo poder.
+-- ---------------------------------------------------------------------
+CREATE TABLE hero_powers (
+    hero_id     INTEGER      NOT NULL
+                REFERENCES heroes(id) ON DELETE CASCADE,
+    power_id    INTEGER      NOT NULL
+                REFERENCES powers(id) ON DELETE CASCADE,
+    created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (hero_id, power_id)
+);
+
+CREATE INDEX idx_hero_powers_power_id ON hero_powers(power_id);
