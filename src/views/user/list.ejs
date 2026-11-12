@@ -1,0 +1,7 @@
+<%- include('../layout/header'); -%>
+
+<h2> Usuarios:</h2>
+<% for (user of users) {%>
+    <%- include('userCard',{user}) -%>
+<% } %>
+<%- include('../layout/footer'); -%>
