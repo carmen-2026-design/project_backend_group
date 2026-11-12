@@ -1,9 +1,9 @@
 <article class="user-card">
-    <h3><%= user.username %></h3>
-    <p>Email: <%= user.email %></p>
-    <p>Rol: <%= user.role %></p>
-    <a href="/user/<%=user.id%>">Visitar</a>
-    <form method="post" action="/user/<%=user.id%>/delete">
+    <h3><%= user.user_name %></h3>
+    <p>Email: <%= user.user_email %></p>
+    <p>Rol: <%= user.user_role %></p>
+    <a href="/user/<%=user.user_id%>">Visitar</a>
+    <form method="post" action="/user/<%=user.user_id%>/delete">
         <button>Eliminar</button>
     </form>
 

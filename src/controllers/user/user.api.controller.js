@@ -6,23 +6,23 @@ import { users } from "../../models/testdata.js";
 // ------------------ C (Create)
 // endpoint para crear dato
 const create = (req,res)=>{
-    const id =users[users.length-1].id + 1
-    const {username,email,password,role} = req.body;
+    const user_id =users[users.length-1].user_id + 1
+    const {user_name,user_email,user_password,user_role} = req.body;
     const user = {
-        id,
-        username,
-        email,
-        password,
-        role
+        user_id,
+        user_name,
+        user_email,
+        user_password,
+        user_role
     }
     users.push(user)
     // Esto de abajo es lo mismo porque el nombre de la variable y la clave son iguales, vale?
     //  users.push({
-    //     id:id,
-    //     username:username,
-    //     email:email,
-    //     password:password,
-    //     role:role
+    //     user_id:user_id,
+    //     user_name:user_name,
+    //     user_email:user_email,
+    //     user_password:user_password,
+    //     user_role:user_role
     // })
     res.json({data:user})
 }
@@ -35,8 +35,8 @@ const getAll = (req, res) => {
 
 // endpoint dato individual
 const getById =(req, res) => {
-    const id = parseInt(req.params.id);
-    const user = users.find(u=>u.id===id)
+    const user_id = parseInt(req.params.id);
+    const user = users.find(u=>u.user_id===user_id)
     res.json({ data: user })
 };
 
@@ -45,34 +45,34 @@ const getById =(req, res) => {
 // ---------------- U (Update) -----------------------------------
 // endpoint para cambiar dato por completo
 const update =(req,res)=>{
-    const {username,email,password,role} = req.body;
-    const id = req.params.id;
-    const user  = users.find(u=>u.id===id)
-    user.username = username;
-    user.email = email;
-    user.password = password;
-    user.role = role;
+    const {user_name,user_email,user_password,user_role} = req.body;
+    const user_id = req.params.id;
+    const user  = users.find(u=>u.user_id===user_id)
+    user.user_name = user_name;
+    user.user_email = user_email;
+    user.user_password = user_password;
+    user.user_role = user_role;
     res.json({data:user});
 }
 
 // endpoint para cambiar parte del dato
 const modify =(req,res)=>{
-    const {username,email,password,role} = req.body;
-    const id = req.params.id;
-    const user  = users.find(u=>u.id===id)
+    const {user_name,user_email,user_password,user_role} = req.body;
+    const user_id = req.params.id;
+    const user  = users.find(u=>u.user_id===user_id)
 
-    user.username = username || user.username;
-    user.email = email || user.email;
-    user.password = password || user.password;
-    user.role = role || user.role;
+    user.user_name = user_name || user.user_name;
+    user.user_email = user_email || user.user_email;
+    user.user_password = user_password || user.user_password;
+    user.user_role = user_role || user.user_role;
     res.json({data:user});
 }
 
 // ------------------------ D (Delete)------------
 
 const remove =(req,res)=>{
-    const id  = parseInt(req.params.id);
-    const index = users.findIndex(u=>u.id === id);
+    const user_id  = parseInt(req.params.id);
+    const index = users.findIndex(u=>u.user_id === user_id);
     let user;
     if(index > -1){
         user =users.splice(index,1);
