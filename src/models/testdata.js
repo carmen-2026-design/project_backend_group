@@ -1,3 +1,8 @@
+import User from "./user.model.js";
+// import Event from "./event.model.js";
+// import Category from "./category.model.js";
+// import Registration from "./registration.model.js";
+
 // /**
 //  * JoinUp · Seed data for joinup_db
 //  *
@@ -7,7 +12,17 @@
 //  * Notes:
 //  * - The *_id fields are included so the relations are easy to read.
 //  *   On a freshly created database, insert the rows in array order WITHOUT
-//  *   the id (the columns are GENERATED ALWAYS AS IDENTITY) and the generated
+//  *   the id (the columns are GEUser.hasMany(Event, {foreignKey: 'userId', as: 'events'});
+// Event.belongsTo(User, {foreignKey: 'userId',as: 'owner'});
+
+// Category.hasMany(Event, {foreignKey: 'categoryId', as: 'category'});
+// Event.belongsTo(Category, {foreignKey: 'categoryId',as: 'owner'});
+
+// User.hasMany(Registration, {foreignKey: 'userId', as: 'events'});
+// Registration.belongsTo(User, {foreignKey: 'userId',as: 'owner'});
+
+// Event.hasMany(Registration, {foreignKey: 'eventId', as: 'events'});
+// Registration.belongsTo(NERATED ALWAYS AS IDENTITY) and the generated
 //  *   ids will match these ones.
 //  * - user_password is in plain text ONLY for seeding: hash it with bcrypt
 //  *   before inserting. The password for every user is "Password123!".
@@ -266,14 +281,27 @@
 //     REFERENCES events (event_id) ON UPDATE CASCADE ON DELETE CASCADE
 
 
-import User from "./user.model.js";
-//import Hero from "./hero.model.js";
-
 // User.hasMany(Event, {foreignKey: 'userId', as: 'events'});
 // Event.belongsTo(User, {foreignKey: 'userId',as: 'owner'});
 
+// Category.hasMany(Event, {foreignKey: 'categoryId', as: 'category'});
+// Event.belongsTo(Category, {foreignKey: 'categoryId',as: 'owner'});
+
+// User.hasMany(Registration, {foreignKey: 'userId', as: 'events'});
+// Registration.belongsTo(User, {foreignKey: 'userId',as: 'owner'});
+
+// Event.hasMany(Registration, {foreignKey: 'eventId', as: 'events'});
+// Registration.belongsTo(Event, {foreignKey: 'eventId',as: 'owner'});
+
+
+// export {
+//     User,
+//     Event,
+//     Category,
+//     Registration   
+// }
+
 
 export {
-    User
-    
+  User
 }
