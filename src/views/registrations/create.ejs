@@ -1,0 +1,27 @@
+<%- include('../layout/header'); -%>
+
+<h2> Nueva inscripción:</h2>
+
+<form action="/registration" method="post">
+
+    <label for="user_id">ID del usuario</label>
+    <input type="number" name="user_id" id="user_id" required>
+
+    <label for="event_id">ID del evento</label>
+    <input type="number" name="event_id" id="event_id" required>
+
+    <label for="registration_people">Número de personas</label>
+    <input type="number" name="registration_people" id="registration_people" min="1" value="1">
+
+    <label for="registration_status">Estado de inscripción</label>
+    <select name="registration_status" id="registration_status">
+        <% statuses.forEach(status => { %>
+            <option value="<%= status %>"><%= status %></option>
+        <% }) %>
+    </select>
+
+    <button>Crear</button>
+
+</form>
+
+<%- include('../layout/footer'); -%>
