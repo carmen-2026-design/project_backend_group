@@ -1,0 +1,13 @@
+<%- include('../layout/header'); -%>
+
+<h2> Nuevo usuario:</h2>
+<form action="/category" method="post">
+    <label for="category_name">Nombre de la categoria</label>
+    <input type="text" name="category_name" id="category_name">
+    <label for="category_description">Descripción</label>
+    <input type="text" id="category_description" name="category_description">
+
+
+    <button>Crear</button>
+</form>
+<%- include('../layout/footer'); -%>

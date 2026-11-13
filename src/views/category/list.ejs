@@ -1,0 +1,7 @@
+<%- include('../layout/header'); -%>
+
+<h2> categorias:</h2>
+<% for (category of categories) {%>
+    <%- include('category_card',{category}) -%>
+<% } %>
+<%- include('../layout/footer'); -%>
