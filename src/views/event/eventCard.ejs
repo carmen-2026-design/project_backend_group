@@ -1,0 +1,17 @@
+<article class="event-card">
+    <h3><%= event.event_title %></h3>
+    <p>Descripcion: <%= event.email %></p>
+    <p>Fecha: <%= event.event_date %></p>
+    <p>Direccion: <%= event.event_address %></p>
+    <p>Código Postal: <%= event.event_postal_code %></p>
+    <p>Provincia: <%= event.province_id %></p>
+    <p>Creador: <%= event.event_creator_id %></p>
+    <p>Categoria: <%= event.category_id %></p>
+
+
+    <a href="/event/<%=event.id%>">Visitar</a>
+    <form method="post" action="/event/<%=event.id%>/delete">
+        <button>Eliminar</button>
+    </form>
+
+</article>
