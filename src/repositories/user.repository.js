@@ -1,5 +1,4 @@
-// import { User, Hero } from "../models/index.js";
-import { User } from "../models/index.js";
+import { User } from "../models/testdata.js";
 
 
 // ------------------ CRUD de user ----------------------------

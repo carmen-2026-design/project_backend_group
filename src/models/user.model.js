@@ -7,21 +7,21 @@ const User = connection.define("User",{
         primaryKey: true,
         autoIncrement: true
     },
-    username:{
+    userName:{
         type:DataTypes.STRING,
         allowNull: false,
         unique: true
     },
-    email: {
+    userEmail: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
     },
-    password: {
+    userPassword: {
         type: DataTypes.STRING,
         allowNull:false
     },
-    role: {
+    userRole: {
         type: DataTypes.ENUM("admin","user"),
         defaultValue: "user",
         allowNull: false
