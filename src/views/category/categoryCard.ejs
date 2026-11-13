@@ -1,0 +1,10 @@
+<article class="category-card">
+    <h3><%= category.category_name %></h3>
+    <p>Email: <%= category.category_id %></p>
+    <p>Rol: <%= category.category_description %></p>
+    <a href="/category/<%=category.category_id%>">Visitar</a>
+    <form method="post" action="/category/<%=category.category_id%>/delete">
+        <button>Eliminar</button>
+    </form>
+
+</article>
