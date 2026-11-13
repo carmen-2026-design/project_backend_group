@@ -1,0 +1,9 @@
+<%- include('../layout/header'); -%>
+
+<h2> Inscripciones:</h2>
+
+<% for (registration of registrations) { %>
+    <%- include('registrationCard', { registration }) -%>
+<% } %>
+
+<%- include('../layout/footer'); -%>
