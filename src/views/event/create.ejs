@@ -1,0 +1,42 @@
+<%- include('../layout/header'); -%>
+
+<h2> Nuevo evento:</h2>
+<form action="/event" method="post">
+    <label for="event_title">Nombre del Evento</label>
+    <input type="text" name="event_title" id="event_title">
+    <label for="event_description">Descripción</label>
+    <input type="text" id="event_description" name="event_description">
+    <label for="event_date">Fecha</label>
+    <input type="date" name="event_date" id="event_date">
+    <label for="event_address">Dirección</label>
+    <input type="text" name="event_address" id="event_address">
+    <label for="event_postal_code">Código Postal</label>
+    <input type="text" name="event_postal_code" id="event_postal_code">
+
+    <label for="province_id">Provincia</label>
+    <select name="province_id" id="province_id">
+        <% for(province of provinces) { %>
+            <option value="<%=province%>" ><%=province %> </option>
+       <% } %>
+    </select>
+
+
+    <label for="event_creator_id">Creador</label>
+    <input type="text" name="event_creator_id" id="event_creator_id">
+    
+
+
+
+    <label for="category_id">Categoria</label>
+    <select name="category_id" id="category_id">
+        <% for(category of categories) { %>
+            <option value="<%=category%>" ><%=category %> </option>
+       <% } %>
+    </select>
+
+
+
+
+    <button>Crear</button>
+</form>
+<%- include('../layout/footer'); -%>
