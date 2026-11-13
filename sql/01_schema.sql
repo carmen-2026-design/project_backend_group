@@ -12,30 +12,9 @@
 --  ¡Atención! Borra las tablas si ya existen (se pierden los datos).
 -- =====================================================================
 
-DROP TABLE IF EXISTS provinces;
-DROP TABLE IF EXISTS registrations;
-DROP TABLE IF EXISTS categories;
-DROP TABLE IF EXISTS events;
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS registrations, events, categories, provinces, users CASCADE;
+DROP TYPE IF EXISTS registration_status_enum, user_role_enum CASCADE;
 
--- CONSTRAINT uq_users_email UNIQUE (user_email)
--- CONSTRAINT uq_categories_name UNIQUE (category_name)
--- CONSTRAINT uq_provinces_name UNIQUE (province_name)
-
--- CONSTRAINT chk_events_postal_code CHECK (event_postal_code ~ '^[0-9]{5}$'),
---   CONSTRAINT fk_events_province  FOREIGN KEY (province_id)
---     REFERENCES provinces (province_id)  ON UPDATE CASCADE ON DELETE RESTRICT,
---   CONSTRAINT fk_events_creator FOREIGN KEY (event_creator_id)
---     REFERENCES users (user_id)          ON UPDATE CASCADE ON DELETE RESTRICT,
---   CONSTRAINT fk_events_category  FOREIGN KEY (category_id)
---     REFERENCES categories (category_id) ON UPDATE CASCADE ON DELETE RESTRICT
-
--- CONSTRAINT chk_registrations_people CHECK (registration_people BETWEEN 1 AND 10),
---   CONSTRAINT uq_registrations_user_event UNIQUE (user_id, event_id),
---   CONSTRAINT fk_registrations_user  FOREIGN KEY (user_id)
---     REFERENCES users (user_id)   ON UPDATE CASCADE ON DELETE CASCADE,
---   CONSTRAINT fk_registrations_event FOREIGN KEY (event_id)
---     REFERENCES events (event_id) ON UPDATE CASCADE ON DELETE CASCADE
 
 -- -------------------------------------------------------------
 --  ENUM TYPES
@@ -47,13 +26,15 @@ CREATE TYPE registration_status_enum AS ENUM ('registered', 'cancelled');
 --  USERS
 -- -------------------------------------------------------------
 CREATE TABLE users (
-  user_id        SERIAL       PRIMARY KEY,
-  user_name      VARCHAR(100)   NOT NULL UNIQUE,
-  user_email     VARCHAR(150)   NOT NULL UNIQUE,
+  user_id        SERIAL         PRIMARY KEY,
+  user_name      VARCHAR(100)   NOT NULL,
+  user_email     VARCHAR(150)   NOT NULL,
   user_password  VARCHAR(255)   NOT NULL,             -- bcrypt hash, never plain text
   user_role      user_role_enum NOT NULL DEFAULT 'user',
-  created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-  updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+  created_at     TIMESTAMPTZ    NOT NULL DEFAULT NOW(),
+  updated_at     TIMESTAMPTZ    NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT uq_users_email UNIQUE (user_email)
 );
 
 -- -------------------------------------------------------------
@@ -61,20 +42,23 @@ CREATE TABLE users (
 -- -------------------------------------------------------------
 CREATE TABLE categories (
   category_id           SERIAL       PRIMARY KEY,
-  category_name         VARCHAR(60)  NOT NULL UNIQUE,
+  category_name         VARCHAR(60)  NOT NULL,
   category_description  TEXT,
-  created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-  updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+  created_at            TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+  updated_at            TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT uq_categories_name UNIQUE (category_name)
 );
 
 -- -------------------------------------------------------------
 --  PROVINCES (read-only catalogue, filled by the seed below)
 -- -------------------------------------------------------------
 CREATE TABLE provinces (
-  province_id    SERIAL       PRIMARY KEY,
+  province_id    SMALLINT     PRIMARY KEY,           -- INE code (01-52)
   province_name  VARCHAR(60) NOT NULL,
   created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-  updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+  updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+  CONSTRAINT uq_provinces_name UNIQUE (province_name)
 );
 
 -- -------------------------------------------------------------
@@ -88,16 +72,25 @@ CREATE TABLE events (
   event_address      VARCHAR(255) NOT NULL,
   event_postal_code  CHAR(5)      NOT NULL,           -- text, keeps leading zeros (08001)
   province_id        SMALLINT     NOT NULL,
-  event_creator_id   INTEGER      NOT NULL,
+  user_id   INTEGER      NOT NULL,
   category_id        INTEGER      NOT NULL,
   created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-  updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+  updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT chk_events_postal_code CHECK (event_postal_code ~ '^[0-9]{5}$'),
+  CONSTRAINT fk_events_province  FOREIGN KEY (province_id)
+  REFERENCES provinces (province_id) ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT fk_events_creator FOREIGN KEY (user_id)
+  REFERENCES users (user_id) ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT fk_events_category  FOREIGN KEY (category_id)
+  REFERENCES categories (category_id) ON UPDATE CASCADE ON DELETE RESTRICT
+
 );
 
 CREATE INDEX idx_events_date      ON events (event_date);
 CREATE INDEX idx_events_province  ON events (province_id);
 CREATE INDEX idx_events_category  ON events (category_id);
-CREATE INDEX idx_events_creator ON events (event_creator_id);
+CREATE INDEX idx_events_creator ON events (user_id);
 
 -- -------------------------------------------------------------
 --  REGISTRATIONS (N:M between users and events)
@@ -110,7 +103,14 @@ CREATE TABLE registrations (
   registration_status       registration_status_enum NOT NULL DEFAULT 'registered',
   registration_cancel_date  TIMESTAMP,
   created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-  updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+  updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT chk_registrations_people CHECK (registration_people BETWEEN 1 AND 10),
+  CONSTRAINT uq_registrations_user_event UNIQUE (user_id, event_id),
+  CONSTRAINT fk_registrations_user  FOREIGN KEY (user_id)
+  REFERENCES users (user_id)   ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_registrations_event FOREIGN KEY (event_id)
+  REFERENCES events (event_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE INDEX idx_registrations_event ON registrations (event_id);

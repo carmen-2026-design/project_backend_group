@@ -7,7 +7,7 @@ import eventRepository from "../../repositories/event.repository.js";
 // ------------------ C (Create)
 // endpoint para crear dato
 const create = async (req,res)=>{
-    const {event_title,event_description,event_date,event_address,event_postal_code,province_id,event_creator_id,category_id} = req.body;
+    const {event_title,event_description,event_date,event_address,event_postal_code,province_id,user_id,category_id} = req.body;
     const event = await eventRepository.create({
         event_id,
         event_title,
@@ -16,7 +16,7 @@ const create = async (req,res)=>{
         event_address,
         event_postal_code,
         province_id,
-        event_creator_id,
+        user_id,
         category_id
     })
     res.redirect("/event/"+event.eventId);

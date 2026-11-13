@@ -17,7 +17,7 @@ const Event = connection.define("Event",{
         allowNull: true
     },
     eventDate: {
-        type: DataTypes.DATETIME,
+        type: DataTypes.DATE,
         allowNull:false
     },   
     eventAddress: {
@@ -32,7 +32,7 @@ const Event = connection.define("Event",{
         type: DataTypes.INTEGER,
         allowNull:false
     },
-    eventCreatorId: {
+    userId: {
         type: DataTypes.INTEGER,
         allowNull:false
     },

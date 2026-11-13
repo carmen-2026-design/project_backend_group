@@ -1,7 +1,7 @@
-import { Event } from "../models/event.model.js";
+import Event from "../models/event.model.js"
 
 
-// ------------------ CRUD de user ----------------------------
+// ------------------ CRUD de event ----------------------------
 
 // ------------------ C (Create)
 // endpoint para crear dato
@@ -20,13 +20,8 @@ const getAll = async () => {
 
 // endpoint dato individual
 const getById = async (id) => {
-    const event = await event.findByPk(id);
-    // const user = await User.findByPk(id, {
-    //     include: {
-    //         model: Hero,
-    //         as: "heroes",
-    //     }
-    // });
+    const event = await Event.findByPk(id);
+ 
     return event;
 };
 
@@ -34,7 +29,7 @@ const getById = async (id) => {
 // ---------------- U (Update) -----------------------------------
 // endpoint para cambiar dato por completo
 const update = async (id, data) => {
-    const { event_title,event_description, event_date, event_address, event_postal_code, province_id, event_creator_id, category_id } = data;
+    const { event_title,event_description, event_date, event_address, event_postal_code, province_id, user_id, category_id } = data;
     const event = await Event.findByPk(id);
     if (event) {
         event.event_title = event_title;
@@ -54,7 +49,7 @@ const update = async (id, data) => {
 }
 
 const modify = async (id, data) => {
-    const {event_title,event_description, event_date, event_address, event_postal_code, province_id, event_creator_id, category_id } = data;
+    const {event_title,event_description, event_date, event_address, event_postal_code, province_id, user_id, category_id } = data;
     const event = await Event.findByPk(id);
     if (!event) {
         return null;
