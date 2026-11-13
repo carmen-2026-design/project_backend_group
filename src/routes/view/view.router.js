@@ -1,6 +1,6 @@
 import { Router } from "express";
 import userRouter from "./user.router.js";
-// import heroRouter from "./hero.router.js";
+
 
 const router  = Router();
 
@@ -9,6 +9,6 @@ router.get("/", (req, res) => {
 })
 
 router.use("/user",userRouter);
-// router.use("/hero",heroRouter);
+
 
 export default router;

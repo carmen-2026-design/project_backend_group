@@ -21,12 +21,7 @@ const getAll = async () => {
 // endpoint dato individual
 const getById = async (id) => {
     const user = await User.findByPk(id);
-    // const user = await User.findByPk(id, {
-    //     include: {
-    //         model: Hero,
-    //         as: "heroes",
-    //     }
-    // });
+   
     return user;
 };
 
