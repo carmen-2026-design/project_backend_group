@@ -6,14 +6,14 @@ import userRepository from "../../repositories/user.repository.js";
 // ------------------ C (Create)
 // endpoint para crear dato
 const create = async (req,res)=>{
-    const {user_name,user_email,user_password,user_role} = req.body;
+    const {userName,userEmail,userPassword,userRole} = req.body;
     const user = await userRepository.create({
-        user_name,
-        user_email,
-        user_password,
-        user_role
+        userName,
+        userEmail,
+        userPassword,
+        userRole
     })
-    res.redirect("/user/"+user.user_id);
+    res.redirect("/user/"+user.userId);
 }
 
 const createForm = (req,res)=>{
@@ -30,8 +30,8 @@ const getAll = async(req, res) => {
 
 // endpoint dato individual
 const getById = async (req, res) => {
-    const user_id = parseInt(req.params.id);
-    const user = await userRepository.getById(user_id);
+    const id = parseInt(req.params.id);
+    const user = await userRepository.getById(id);
     res.render("user/show",{user})
 };
 
@@ -39,18 +39,18 @@ const getById = async (req, res) => {
 // ---------------- U (Update) -----------------------------------
 // endpoint para cambiar dato por completo
 const update = async(req,res)=>{
-    const user_id = parseInt(req.params.id);
-    const user  = await userRepository.update(user_id, req.body);
+    const id = parseInt(req.params.id);
+    const user  = await userRepository.update(id, req.body);
     if(user){
-        res.redirect("/user/"+user.user_id);
+        res.redirect("/user/"+user.userId);
     }else{
         res.redirect("/user");
     }
 }
 
 const updateForm = async(req,res)=>{
-    const user_id = parseInt(req.params.id);
-    const user = await userRepository.getById(user_id);
+    const id = parseInt(req.params.id);
+    const user = await userRepository.getById(id);
     res.render("user/update", {user})
 }
 
@@ -58,8 +58,9 @@ const updateForm = async(req,res)=>{
 // ------------------------ D (Delete)------------
 
 const remove = async(req,res)=>{
-    const user_id  = parseInt(req.params.id);
-    const user = await userRepository.remove(user_id);
+    const id  = parseInt(req.params.id);
+    console.log("ID intentando eliminar:", id);
+    const user = await userRepository.remove(id);
     res.redirect("/user");
 }
 
