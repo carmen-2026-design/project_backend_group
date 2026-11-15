@@ -1,0 +1,26 @@
+<%- include('../layout/header'); -%>
+
+<h2> Editar usuario:</h2>
+<form action="/user/<%= user.userId %>/edit" method="post">
+
+    <label for="userName">Nombre de usuario</label>
+    <input type="text" name="userName" id="userName" value="<%= user.userName %>">
+
+    <label for="userEmail">Email</label>
+    <input type="email" id="userEmail" name="userEmail" value="<%= user.userEmail %>">
+
+    <label for="userRole">Rol</label>
+    <select name="userRole" id="role">
+        <option value="user" <%= user.userRole === 'user' ? 'selected' : '' %>>user</option>
+        <option value="admin" <%= user.userRole === 'admin' ? 'selected' : '' %>>admin</option>
+    </select>
+
+    <label for="userPassword">Contraseña</label>
+    <input type="password" name="userPassword" id="password" value="<%= user.userPassword %>">
+  
+    <button>Actualizar</button>
+    
+    <a href="/user">Volver</a>
+</form>
+
+<%- include('../layout/footer'); -%>

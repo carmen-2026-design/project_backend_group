@@ -29,13 +29,13 @@ const getById = async (id) => {
 // ---------------- U (Update) -----------------------------------
 // endpoint para cambiar dato por completo
 const update = async (id, data) => {
-    const { username, email, password, role } = data;
+    const { userName, userEmail, userPassword, useRole } = data;
     const user = await User.findByPk(id);
     if (user) {
-        user.username = username;
-        user.email = email;
-        user.password = password;
-        user.role = role;
+        user.userName = userName;
+        user.userEmail = userEmail;
+        user.userPassword = userPassword;
+        user.useRole = useRole;
         await user.save();
         return user;
     } else {
@@ -45,31 +45,37 @@ const update = async (id, data) => {
 }
 
 const modify = async (id, data) => {
-    const { username, email, password, role } = data;
+    const { userName, userEmail, userPassword, useRole } = data;
     const user = await User.findByPk(id);
     if (!user) {
         return null;
     }
-    user.username = username || user.username;
-    user.email = email || user.email;
-    user.password = password || user.password;
-    user.role = role || user.role;
+    user.userName = userName || user.userName;
+    user.userEmail = userEmail || user.userEmail;
+    user.userPassword = userPassword || user.userPassword;
+    user.useRole = useRole || user.useRole;
     await user.save();
     return user;
 }
 
 
-
-
 // ------------------------ D (Delete)------------
 
 const remove = async (id) => {
-    const user = await User.findByPk(id);
-    if (user) {
-        await user.destroy();
-        return user;
+    try{
+        const user = await User.findByPk(id);
+        if (user) {
+            await user.destroy();
+            return user;
+        }
+        return null;
+    } catch (error){
+        if (error.name === 'SequelizeDatabaseError'){
+            console.log("No se puede eliminar el usuario porque tiene eventos o registros asociados.");
+        }
+        else
+            throw error;
     }
-    return null;
 }
 
 

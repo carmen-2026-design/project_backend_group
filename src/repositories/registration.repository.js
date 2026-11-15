@@ -1,5 +1,4 @@
-// import { User, Hero } from "../models/index.js";
-import { Registration } from "../models/registration.model.js";
+import { Registration } from "../models/testdata.js";
 
 
 // ------------------ CRUD de registration ----------------------------
