@@ -53,12 +53,33 @@ const updateForm = async (req,res)=>{
 
 // ------------------------ D (Delete)------------
 
-const remove =async (req,res)=>{
+/* const remove =async (req,res)=>{
     const id  = parseInt(req.params.id);
     const category = await categoryRepository.remove(id);
     res.redirect("/category");
-}
+} */
 
+// ------------------------- D (Delete) -------------------------
+
+const remove = async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        
+        // Validación extra por si el ID no es un número
+        if (isNaN(id)) {
+            return res.redirect("/category");
+        }
+
+        await categoryRepository.remove(id);
+        res.redirect("/category");
+        
+    } catch (error) {
+        console.error("Error al eliminar la categoría:", error.message);
+        
+        // Evita que la app se rompa y redirige de vuelta (puedes pasar un query param para mostrar una alerta en la vista)
+        res.redirect("/category?error=no_se_puede_eliminar");
+    }
+}
 
 export default {
     create,
