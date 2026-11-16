@@ -2,33 +2,33 @@
 
 <h2> Nuevo evento:</h2>
 <form action="/event" method="post">
-    <label for="event_title">Nombre del Evento</label>
-    <input type="text" name="event_title" id="event_title">
-    <label for="event_description">Descripción</label>
-    <input type="text" id="event_description" name="event_description">
-    <label for="event_date">Fecha</label>
-    <input type="date" name="event_date" id="event_date">
-    <label for="event_address">Dirección</label>
-    <input type="text" name="event_address" id="event_address">
-    <label for="event_postal_code">Código Postal</label>
-    <input type="text" name="event_postal_code" id="event_postal_code">
+    <label for="eventTitle">Nombre del Evento</label>
+    <input type="text" name="eventTitle" id="eventTitle">
+    <label for="eventDescription">Descripción</label>
+    <input type="text" id="eventDescription" name="eventDescription">
+    <label for="eventDate">Fecha</label>
+    <input type="date" name="eventDate" id="eventDate">
+    <label for="eventAddress">Dirección</label>
+    <input type="text" name="eventAddress" id="eventAddress">
+    <label for="eventPostalCode">Código Postal</label>
+    <input type="text" name="eventPostalCode" id="eventPostalCode">
 
-    <label for="province_id">Provincia</label>
-    <select name="province_id" id="province_id">
+    <label for="provinceId">Provincia</label>
+    <select name="provinceId" id="provinceId">
         <% for(province of provinces) { %>
             <option value="<%=province%>" ><%=province %> </option>
        <% } %>
     </select>
 
 
-    <label for="user_id">Creador</label>
-    <input type="text" name="user_id" id="user_id">
+    <label for="userId">Creador</label>
+    <input type="text" name="userId" id="userId">
     
 
 
 
-    <label for="category_id">Categoria</label>
-    <select name="category_id" id="category_id">
+    <label for="categoryId">Categoria</label>
+    <select name="categoryId" id="categoryId">
         <% for(category of categories) { %>
             <option value="<%=category%>" ><%=category %> </option>
        <% } %>
