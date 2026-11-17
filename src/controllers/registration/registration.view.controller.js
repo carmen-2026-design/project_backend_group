@@ -7,22 +7,22 @@ import registrationRepository from "../../repositories/registration.repository.j
 // endpoint para crear dato
 const create = async (req, res) => {
     const {
-        user_id,
-        event_id,
-        registration_people,
-        registration_status,
-        registration_cancel_date
+        userId,
+        eventId,
+        registrationPeople,
+        registrationStatus,
+        registrationCancelDate
     } = req.body;
 
     const registration = await registrationRepository.create({
-        user_id,
-        event_id,
-        registration_people,
-        registration_status,
-        registration_cancel_date
+        userId,
+        eventId,
+        registrationPeople,
+        registrationStatus,
+        registrationCancelDate
     });
 
-    res.redirect("/registration/" + registration.registration_id);
+    res.redirect("/registration/" + registration.registrationId);
 };
 
 const createForm = (req, res) => {
@@ -55,7 +55,7 @@ const update = async (req, res) => {
     const registration = await registrationRepository.update(id, req.body);
 
     if (registration) {
-        res.redirect("/registration/" + registration.registration_id);
+        res.redirect("/registration/" + registration.registrationId);
     } else {
         res.redirect("/registration");
     }

@@ -2,30 +2,30 @@ import { DataTypes } from "sequelize";
 import connection from "../config/db.js";
 
 const Registration = connection.define("Registration", {
-    registration_id: {
+    registrationId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    user_id: {
+    userId: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    event_id: {
+    eventId: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    registration_people: {
+    registrationPeople: {
         type: DataTypes.SMALLINT,
         allowNull: false,
         defaultValue: 1
     },
-    registration_status: {
+    registrationStatus: {
         type: DataTypes.ENUM("registered", "cancelled"),
         allowNull: false,
         defaultValue: "registered"
     },
-    registration_cancel_date: {
+    registrationCancelDate: {
         type: DataTypes.DATE,
         allowNull: true,
         defaultValue: null
