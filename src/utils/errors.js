@@ -1,6 +1,92 @@
-// Traduce los errores de Sequelize a un mensaje y un código HTTP
-// para no repetir lo mismo en todos los controladores.
+class ErrorWithStatus extends Error {
+    constructor(message, status) {
+        super(message);
+        this.status = status;
+    }
+}
 
+class GenericError extends ErrorWithStatus {
+    constructor(message="Ha ocurrido un error de servidor"){
+        super(message,500);
+        this.name = "GenericError"
+    }
+}
+
+// --------------------------- errores de unicidad
+class UniqueConstraintError extends ErrorWithStatus {
+    constructor(message = "Ya existe un registro con estos valores"){
+        super(message);
+        this.status = 409;
+        this.name="UniqueConstraintError";
+    }
+}
+
+class UniqueEmailError extends UniqueConstraintError {
+    constructor(email) {
+        super(`Ya existe un usuario con el email ${email}`);
+        this.name = "UniqueEmailError";
+    }
+}
+class UniqueUsernameError extends UniqueConstraintError {
+    constructor(username) {
+        super(`Ya existe un usuario con el username ${username}`);
+        this.name = "UniqueUsernameError";
+    }
+}
+
+// --------------- errores de validación
+class ValidationError extends ErrorWithStatus {
+    constructor(message="Error de validación de datos"){
+        super(message,400);
+        this.name="ValidationError";
+    }
+}
+
+// ---------------- errores de no encontrado
+
+class NotFoundError extends ErrorWithStatus {
+    constructor(message="Recurso no encontrado"){
+        super(message,404);
+        this.name="NotFoundError";
+    }
+}
+const errorFamilies = {
+    SequelizeUniqueConstraintError: { // valores que no se pueden repetir
+        default: UniqueConstraintError,
+        username: UniqueUsernameError,
+        email: UniqueEmailError
+    },
+    SequelizeValidationError:{ // validación incorrecta
+        default: ValidationError
+    },
+    SequelizeForeignKeyConstraintError: { // clave foranea que no apunta correctamente
+        default: GenericError
+    },
+    SequelizeDatabaseError:{ // error de base de datos
+        default: GenericError
+    },
+
+
+}
+const throwError = (error) =>{
+    if(error instanceof ErrorWithStatus){
+        throw error;
+    }
+    if(error.name in errorFamilies){
+        const family =  errorFamilies[error.name];
+        const path = error.errors && error.errors[0].path;
+        const value = error.errors && error.errors[0].value;
+        if(path in family){
+            const ErrorType = family[path];
+            throw new ErrorType(value);
+        }else{
+            const ErrorType = family["default"];
+            throw new ErrorType(value)
+        }
+    }else{
+        throw new GenericError();
+    }
+}
 // Mensaje legible para mostrar en un formulario o devolver en la API
 const getErrorMessage = (error) => {
     switch (error.name) {
@@ -37,5 +123,11 @@ const getErrorStatus = (error) => {
 
 export {
     getErrorMessage,
-    getErrorStatus
+    getErrorStatus,
+    UniqueConstraintError,
+    UniqueEmailError,
+    UniqueUsernameError,
+    throwError,
+    NotFoundError
 }
+

@@ -1,6 +1,22 @@
-<%- include('../layout/header'); -%>
+<%- include('../layout/header', { title: 'Usuario' }); -%>
 
-<h2> Editar usuario:</h2>
+<h2>Editar usuario</h2>
+<%- include('../layout/error') -%>
+
+<% if(query ){
+    if(query.error){
+        %>
+        <p class="error"><%= query.error %></p>
+        <%
+    }
+    if(query.message){
+        %>
+        <p class="message"><%= query.message %></p>
+        <%
+    }
+}
+%>
+
 <form action="/user/<%= user.userId %>/edit" method="post">
 
     <label for="userName">Nombre de usuario</label>
