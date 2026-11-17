@@ -28,15 +28,14 @@ const getById = async (id) => {
 // ---------------- U (Update) -----------------------------------
 // endpoint para cambiar dato por completo
 const update = async (id, data) => {
-    const { registration_id, user_id, event_id, registration_people, registration_status, registration_cancel_date } = data;
+    const { userId, eventId, registrationPeople, registrationStatus, registrationCancelDate } = data;
     const registration = await Registration.findByPk(id);
     if (registration) {
-        registration.registration_id = registration_id;
-        registration.user_id = user_id;
-        registration.event_id = event_id;
-        registration.registration_people = registration_people;
-        registration.registration_status = registration_status;
-        registration.registration_cancel_date = registration_cancel_date;
+        registration.userId = userId;
+        registration.eventId = eventId;
+        registration.registrationPeople = registrationPeople;
+        registration.registrationStatus = registrationStatus;
+        registration.registrationCancelDate = registrationCancelDate;
         await registration.save();
         return registration;
     } else {
@@ -46,19 +45,18 @@ const update = async (id, data) => {
 }
 
 const modify = async (id, data) => {
-    const { registration_id, user_id, event_id, registration_people, registration_status, registration_cancel_date } = data;
+    const { userId, eventId, registrationPeople, registrationStatus, registrationCancelDate } = data;
     const registration = await Registration.findByPk(id);
     if (!registration) {
         return null;
     }
-        registration.registration_id = registration_id || registration.registration_id;
-        registration.user_id = user_id || registration.user_id;
-        registration.event_id = event_id || registration.event_id;
-        registration.registration_people = registration_people || registration.registration_people;
-        registration.registration_status = registration_status || registration.registration_status;
-        registration.registration_cancel_date = registration_cancel_date || registration.registration_cancel_date;
-    await user.save();
-    return user;
+        registration.userId = userId || registration.userId;
+        registration.eventId = eventId || registration.eventId;
+        registration.registrationPeople = registrationPeople || registration.registrationPeople;
+        registration.registrationStatus = registrationStatus || registration.registrationStatus;
+        registration.registrationCancelDate = registrationCancelDate || registration.registrationCancelDate;
+    await registration.save();
+    return registration;
 }
 
 
