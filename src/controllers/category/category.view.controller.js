@@ -6,9 +6,12 @@ import categoryRepository from "../../repositories/category.repository.js";
 
 // ------------------ C (Create)
 // endpoint para crear dato
+
+
+
 const create = async (req,res)=>{
 
-    const category = await categoryRepositoryRepository.create({...req.body,categoryId:1})
+    const category = await categoryRepository.create({...req.body,categoryId:1})
     res.redirect("/category/"+category.categoryId);
 }
 
