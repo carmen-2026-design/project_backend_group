@@ -73,8 +73,14 @@ const login = async (req,res)=>{
 }
 
 const logout= async(req, res) => {
-    req.urlSearchParams.destroy();
-    res.redirect("/");
+    try{
+        req.session.destroy();
+        redirect(res, "/", {message:"El usuario se ha deslogeado correctamente"})
+    }
+    catch (error) {
+        console.error(error);
+        redirect(res, "/", {error:"Error al deslogearse"})
+    }
 }
 
 export default {
