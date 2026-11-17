@@ -1,9 +1,24 @@
-<%- include('../layout/header'); -%>
+<%- include('../layout/header', { title: 'Usuario' }); -%>
 
+<h2>Datos del usuario</h2>
+<%- include('../layout/error') -%>
 
-    <%- include('userCard',{user}) -%>
+<% if(query ){
+    if(query.error){
+        %>
+        <p class="error"><%= query.error %></p>
+        <%
+    }
+    if(query.message){
+        %>
+        <p class="message"><%= query.message %></p>
+        <%
+    }
+}
+%>
 
-    
+<%- include('userCard',{user}) -%>
 
-    <a href="/user">Volver</a>
+<a href="/user">Volver</a>
+
 <%- include('../layout/footer'); -%>

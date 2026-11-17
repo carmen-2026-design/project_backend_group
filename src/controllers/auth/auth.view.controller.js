@@ -35,13 +35,8 @@ const register = async (req,res)=>{
             return;
         }
 
-        const user = await userRepository.create({
-            userName,
-            userEmail,
-            userPassword,
-            userRole
-        })
-        redirect("/auth/login", {message:"El usuario se ha registrado correctamente"});
+        const user = await userRepository.create({userName,userEmail,userPassword,userRole})
+        redirect(res,"/auth/login", {message:"El usuario se ha registrado correctamente"});
     }
     catch (error){
         console.error(error);
