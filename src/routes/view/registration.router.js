@@ -1,9 +1,9 @@
 import { Router } from "express";
-import registrationViewController from "../../controllers/registrations/registrations.api.controller.js";
+import registrationViewController from "../../controllers/registration/registration.view.controller.js";
 
 const router = Router();
 
-// ------------------ CRUD de user ----------------------------
+// ------------------ CRUD de registration ----------------------------
 
 // ------------------ C (Create)
 // endpoint para crear dato

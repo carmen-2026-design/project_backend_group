@@ -1,0 +1,24 @@
+<article class="registration-card">
+
+    <h3>Inscripción #<%= registration.registrationId %></h3>
+
+    <p>Usuario: <%= registration.userId %></p>
+
+    <p>Evento: <%= registration.eventId %></p>
+
+    <p>Número de personas: <%= registration.registrationPeople %></p>
+
+    <p>Estado: <%= registration.registrationStatus %></p>
+
+    <p>
+        Fecha de cancelación:
+        <%= registration.registrationCancelDate || "No cancelada" %>
+    </p>
+
+    <a href="/registration/<%= registration.registrationId %>">Visitar</a>
+
+    <form method="post" action="/registration/<%= registration.registrationId %>/delete">
+        <button>Eliminar</button>
+    </form>
+
+</article>

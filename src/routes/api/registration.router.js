@@ -1,9 +1,9 @@
 import { Router } from "express";
-import registrationApiController from "../../controllers/registrations/registrations.api.controller.js";
+import registrationApiController from "../../controllers/registration/registrations.api.controller.js";
 
 const router = Router();
 
-// ------------------ CRUD de user ----------------------------
+// ------------------ CRUD de registration ----------------------------
 
 // ------------------ C (Create)
 // endpoint para crear dato
