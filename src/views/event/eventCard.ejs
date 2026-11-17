@@ -10,6 +10,9 @@
 
 
     <a href="/event/<%=event.eventId%>">Visitar</a>
+    <form method="get" action="/event/<%=event.eventId%>/edit">
+        <button>Editar</button>
+    </form>
     <form method="post" action="/event/<%=event.eventId%>/delete">
         <button>Eliminar</button>
     </form>
