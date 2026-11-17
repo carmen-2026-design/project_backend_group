@@ -16,7 +16,9 @@
     </p>
 
     <a href="/registration/<%= registration.registrationId %>">Visitar</a>
-
+    <form method="get" action="/registration/<%= registration.registrationId %>/edit">
+        <button>Editar</button>
+    </form>
     <form method="post" action="/registration/<%= registration.registrationId %>/delete">
         <button>Eliminar</button>
     </form>
