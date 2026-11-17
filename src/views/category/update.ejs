@@ -1,7 +1,7 @@
 <%- include('../layout/header'); -%>
 
 <h2> Editar categoria:</h2>
-<form action="/category" method="post">
+<form action="/category/<%=category.categoryId%>/edit" method="post">
 
     <label for="categoryName">Nombre de la categoria</label>
     <input type="text" name="categoryName" id="categoryName" value="<%= category.categoryName%>">

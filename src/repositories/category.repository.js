@@ -32,11 +32,11 @@ const getById = async (id) => {
 // endpoint para cambiar dato por completo
 
 const update = async (id, data) => {
-    const { categoryId, categoryName, categoryDescription} = data;
+    const {  categoryName, categoryDescription} = data;
+    console.log("-----------------\n",id)
     const category = await Category.findByPk(id);
     if (category) {
         category.categoryName = categoryName;
-        category.categoryId = categoryId;
         category.categoryDescription = categoryDescription;
 
         await category.save();

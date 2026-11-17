@@ -37,10 +37,10 @@ const getById =async (req, res) => {
 // ---------------- U (Update) -----------------------------------
 // endpoint para cambiar dato por completo
 const update =async (req,res)=>{
-    const id = req.params.id;
+    const id =parseInt(req.params.id);
     const category  = await categoryRepository.update(id,req.body);
     if(category){
-        res.redirect("/category/"+category.id);
+        res.redirect("/category/"+category.categoryId);
     }else{
         res.redirect("/category");
     }
