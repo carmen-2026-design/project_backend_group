@@ -64,7 +64,7 @@ const modify = async (id, data) => {
 
 // ------------------------ D (Delete)------------
 
-const remove = async (id) => {
+/* const remove = async (id) => {
     const category = await Category.findByPk(id);
     if (category) {
         await category.destroy();
@@ -73,7 +73,36 @@ const remove = async (id) => {
     return null;
 }
 
+ */
 
+const remove = async (id) => {
+    try {
+        const category = await Category.findByPk(id);
+        
+        if (category) {
+            console.log(category);
+            
+            await category.destroy();
+            return category; // Eliminado con éxito
+        }
+        
+        return null; // No se encontró la categoría
+        
+    } catch (error) {
+        console.error("Error en el repositorio al eliminar la categoría:", error.message);
+        
+        // Si el error es por una relación (foreign key), lanzamos un mensaje amigable
+        if (error.name === 'SequelizeForeignKeyConstraintError') {
+            throw new Error("No se puede eliminar esta categoría porque tiene elementos asociados.");
+                            console.alert('hola');
+
+        }
+        
+        // Para cualquier otro error inesperado, lo propagamos
+        throw error;
+
+    }
+}   
 export default {
     create,
     getAll,

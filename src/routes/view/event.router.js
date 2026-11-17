@@ -1,14 +1,35 @@
 import { Router } from "express";
-import eventRouter from "./event.router.js";
+import eventViewController from "../../controllers/event/events.view.controller.js";
 
 
 const router  = Router();
 
-router.get("/", (req, res) => {
-    res.send("<h1 style='background-color:#fabada;'>Hello from view</h1>")
-})
+// ------------------ CRUD de event ----------------------------
 
-router.use("/event",eventRouter);
+// ------------------ C (Create)
+// endpoint para crear dato
+// vista de formulario
+router.get("/new",eventViewController.createForm);
+
+// creación de dato
+router.post("/",eventViewController.create);
+
+// ------------------ R (Read)---------------------------------------------
+// endpoint lista de datos
+router.get("/",eventViewController.getAll);
+
+// endpoint dato individual
+router.get("/:id", eventViewController.getById)
+
+// ---------------- U (Update) -----------------------------------
+// vista de actualización de evento
+router.get("/:id/edit",eventViewController.updateForm);
+
+// endpoint para cambiar dato por completo
+router.post("/:id/edit",eventViewController.update)
+
+// ------------------------ D (Delete)------------
+router.post("/:id/delete",eventViewController.remove)
 
 
 export default router;
