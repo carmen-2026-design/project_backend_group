@@ -3,17 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi página</title>
+    <%# "locals" contiene todas las variables que recibe la vista: así no falla si no nos pasan title %>
+    <title><%= locals.title ? title + " | " : "" %>Joinup</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <header>
     <nav>
-        <h1>Mi página</h1>
+        <h1>Joinup</h1>
         <ul>
-            <li></li>
-            <li></li>
-            <li></li>
+            <li><a href="/">Inicio</a></li>
+            <% if(!user){
+                %>
+            <li><a href="/auth/login">Login</a></li>
+            <%
+            }else{
+                %>
+            <li><a href="/auth/logout">Logout</a></li>
+            <li><a href="/user">Usuarios</a></li>
+            <%}%>
         </ul>
     </nav>
 </header>

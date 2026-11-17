@@ -3,11 +3,12 @@ import dotenv from "dotenv";
 import cors from "cors";
 import router from "./routes/router.js";
 import connection from "./config/db.js";
+import session from "express-session";
 
 
 dotenv.config(); //permite leer las variables de entorno del fichero .env
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 
@@ -16,17 +17,25 @@ app.use(cors())
 app.use(express.json()) // permite leer el body de los POST en json
 app.use(express.urlencoded()) // permite leer el body de los POST en formularios
 
+//para recoger los mensajes de error controlados y mostrarlos en las ventanas 
+app.use(session({ 
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}))
+
+app.use((req,res,next)=>{
+    res.locals.query = req.query;
+    res.locals.user = req.session?.user;
+    next();
+})
+
 app.use(express.static("public"));
 
 app.set("views","./src/views"); //configura el directorio de las vistas
 app.set("view engine","ejs");   //configura ejs como motor de plantillas
 
 app.use("/",router);
-
-// //Pone el servidor en funcionamiento
-// app.listen(PORT,()=>{
-//     console.log(`Aplicación en marcha en http://localhost:${PORT}`);
-// })
 
 async function startServer() {
     const maxAttempts = 5;
