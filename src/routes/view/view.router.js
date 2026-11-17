@@ -9,12 +9,12 @@ import { isAuthenticated } from "../../middlewares/auth.middleware.js";
 const router  = Router();
 
 router.get("/", (req, res) => {
-    res.render("index");
+    res.render("home");
 })
 
 router.use("/user",userRouter);
 //router.use("/user",isAuthenticated,userRouter);
-// router.use("/event",eventRouter);
+//router.use("/event",eventRouter);
 router.use("/category",categoryRouter);
 router.use("/registration",registrationRouter);
 router.use("/auth", authRouter);
