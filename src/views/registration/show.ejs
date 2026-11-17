@@ -1,4 +1,21 @@
-<%- include('../layout/header'); -%>
+<%- include('../layout/header', { title: 'Inscripción' }); -%>
+
+<h2>Datos inscripcion</h2>
+<%- include('../layout/error') -%>
+
+<% if(query ){
+    if(query.error){
+        %>
+        <p class="error"><%= query.error %></p>
+        <%
+    }
+    if(query.message){
+        %>
+        <p class="message"><%= query.message %></p>
+        <%
+    }
+}
+%>
 
     <%- include('registrationCard', { registration }) -%>
 
