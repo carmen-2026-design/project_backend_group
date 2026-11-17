@@ -35,7 +35,7 @@ const update = async (id, data) => {
         registration.eventId = eventId;
         registration.registrationPeople = registrationPeople;
         registration.registrationStatus = registrationStatus;
-        registration.registrationCancelDate = registrationCancelDate;
+        registration.registrationCancelDate = registrationCancelDate || null;
         await registration.save();
         return registration;
     } else {
