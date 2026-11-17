@@ -5,6 +5,8 @@ import { Category } from "../models/testdata.js";
 
 // ------------------ C (Create)
 // endpoint para crear dato
+
+
 const create = async (data) => {
     const category = await Category.create(data)
     return category;
@@ -30,12 +32,12 @@ const getById = async (id) => {
 // endpoint para cambiar dato por completo
 
 const update = async (id, data) => {
-    const { category_id, category_name, category_description} = data;
+    const {  categoryName, categoryDescription} = data;
+    console.log("-----------------\n",id)
     const category = await Category.findByPk(id);
     if (category) {
-        category.category_name = category_name;
-        category.category_id = category_id;
-        category.category_description = category_description;
+        category.categoryName = categoryName;
+        category.categoryDescription = categoryDescription;
 
         await category.save();
         return category;
@@ -46,14 +48,14 @@ const update = async (id, data) => {
 }
 
 const modify = async (id, data) => {
-    const { category_id, category_name, category_description} = data;
+    const { categoryId, categoryName, categoryDescription} = data;
     const category = await Category.findByPk(id);
     if (!category) {
         return null;
     }
-    category.category_name = category_name || category.category_name;
-    category.category_id = category_id || category.category_id;
-    category.category_description = category_description || category.category_description;
+    category.categoryName = categoryName || category.categoryName;
+    category.categoryId = categoryId || category.categoryId;
+    category.categoryDescription = categoryDescription || category.categoryDescription;
 
     await category.save();
     return category;

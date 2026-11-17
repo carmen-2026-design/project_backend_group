@@ -2,17 +2,17 @@ import { DataTypes } from "sequelize";
 import connection from "../config/db.js";
 
 const Category = connection.define("Category",{
-    category_id: {
+    categoryId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    category_name:{
+    categoryName:{
         type:DataTypes.STRING,
         allowNull: false,
         unique: true
     },
-    category_description: {
+    categoryDescription: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
