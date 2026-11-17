@@ -1,6 +1,23 @@
-<%- include('../layout/header'); -%>
+<%- include('../layout/header', { title: 'Categoria' }); -%>
 
-<h2> Nueva categoria:</h2>
+<h2>Nueva categoria</h2>
+<%- include('../layout/error') -%>
+
+<% if(query ){
+    if(query.error){
+        %>
+        <p class="error"><%= query.error %></p>
+        <%
+    }
+    if(query.message){
+        %>
+        <p class="message"><%= query.message %></p>
+        <%
+    }
+}
+%>
+
+
 <form action="/category" method="post">
     <label for="categoryName">Nombre de la categoria</label>
     <input type="text" name="categoryName" id="categoryName">

@@ -1,0 +1,48 @@
+<%- include('../layout/header', { title: 'Inscripción' }); -%>
+
+<h2>Editar inscripción</h2>
+<%- include('../layout/error') -%>
+
+<% if(query ){
+    if(query.error){
+        %>
+        <p class="error"><%= query.error %></p>
+        <%
+    }
+    if(query.message){
+        %>
+        <p class="message"><%= query.message %></p>
+        <%
+    }
+}
+%>
+
+<form action="/registration/<%= registration.registrationId %>/edit" method="get">
+
+    <label for="userId">ID del usuario</label>
+    <input type="number" name="userId" id="userId" value="<%= registration.userId %>" required>
+
+    <label for="eventId">ID del evento</label>
+    <input type="number" name="eventId" id="eventId" value="<%= registration.eventId %>" required>
+
+    <label for="registrationPeople">Número de personas</label>
+    <input type="number" name="registrationPeople" id="registrationPeople" min="1" max="10" value="<%= registration.registrationPeople %>" required>
+
+    <label for="registrationStatus">Estado de inscripción</label>
+    <select name="registrationStatus" id="registrationStatus">
+        <% statuses.forEach(status => { %>
+            <option value="<%= status %>" <%= status === registration.registrationStatus ? "selected" : "" %>><%= status %></option>
+        <% }) %>
+    </select>
+
+    <label for="registrationCancelDate">Fecha de cancelación</label>
+    <input type="date" name="registrationCancelDate" id="registrationCancelDate"
+        value="<%= registration.registrationCancelDate ? new Date(registration.registrationCancelDate).toISOString().slice(0, 10) : '' %>">
+
+    <button>Actualizar</button>
+
+</form>
+
+<a href="/registration/<%= registration.registrationId %>">Volver</a>
+
+<%- include('../layout/footer'); -%>

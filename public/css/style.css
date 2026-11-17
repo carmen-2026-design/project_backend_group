@@ -37,6 +37,11 @@ body {
     line-height: 1.6;
 }
 
+ h1, h2 {
+    text-transform: uppercase;
+    letter-spacing: 0.5px; /* Opcional: mejora un poco la lectura en mayúsculas */
+}
+
 header {
     background-color: var(--color-principal);
     color: var(--color-blanco);
@@ -221,6 +226,18 @@ article form button:hover {
     color: var(--color-blanco);
 }
 
+
+
+form[action$="/edit"] button {
+    background-color:var(--color-fondo);
+    color: var(--color-principal);
+}
+
+form[action$="/edit"] button:hover {
+    background-color: #161e2e;
+    color: #ffffff;
+}
+
 body > a {
     width: fit-content;
     margin: 20px 7%;
@@ -250,6 +267,90 @@ article {
 
 article h3 {
     margin-bottom: 20px;
+}
+
+/* Contenedor principal que centra el article en medio de la pantalla */
+.home-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 150px); /* Ajusta el alto restando header y footer */
+/*     padding: 1rem;
+ */    background-color: #f4f6f9; /* Fondo claro suave para contrastar con el card */
+}
+
+/* Tarjeta central (Article) acorde a la paleta de tu navbar */
+.hero-card {
+    background-color: #161e2e; /* Mismo tono azul marino oscuro de tu header */
+    color: #ffffff;
+    padding: 3.5rem 4.5rem;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 550px;
+    width: 100%;
+    box-shadow: 0 10px 25px rgba(22, 30, 46, 0.25);
+    border-top: 4px solid #38bdf8; /* Detalle superior en azul cielo */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(22, 30, 46, 0.35);
+}
+
+/* Título principal */
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    letter-spacing: 1px;
+    color: #ffffff;
+}
+
+/* Subtítulo */
+.hero-subtitle {
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin: 0;
+    color: #cbd5e1; /* Gris azulado claro para buena lectura */
+    line-height: 1.5;
+}
+
+footer {
+    margin-top: auto;
+    font-size: 1.05rem;   /* Aumenta un poco el tamaño de la letra (por defecto suele ser 1rem / 16px) */
+    font-weight: 500;     /* Le da un grosor medio para que destaque más sin llegar a ser negrita pesada */
+    letter-spacing: 0.3px; /* Separa ligeramente las letras para mejorar la lectura sobre fondo oscuro */
+}
+
+/* Estilos compartidos para ambas alertas */
+p.error, p.message {
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    margin: 0 auto 1.5rem 26rem;
+    max-width: 800px;
+    width: 90%;
+    font-size: 0.95rem;
+    font-weight: 500;
+    box-sizing: border-box;
+}
+
+/* Alerta de error (rojo suave acorde a tus tarjetas) */
+p.error {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    border: 1px solid #ef4444;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.08);
+}
+
+/* Alerta de éxito/mensaje informativo (verde/azul suave) */
+p.message {
+    background-color: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    border-left: 5px solid #22c55e;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.08);
 }
 
 

@@ -80,7 +80,7 @@ const remove = async (req, res) => {
         console.error("Error al eliminar la categoría:", error.message);
         
         // Evita que la app se rompa y redirige de vuelta (puedes pasar un query param para mostrar una alerta en la vista)
-        res.redirect("/category?error=no_se_puede_eliminar");
+        res.redirect("/category?error=No se puede eliminar una categoria que tenga un evento programado");
     }
 }
 

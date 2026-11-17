@@ -29,16 +29,16 @@ const getById = async (id) => {
 // ---------------- U (Update) -----------------------------------
 // endpoint para cambiar dato por completo
 const update = async (id, data) => {
-    const { event_title,event_description, event_date, event_address, event_postal_code, province_id, user_id, category_id } = data;
+    const { eventTitle,eventDescription, eventDate, eventAddress, eventPostalCode, provinceId, categoryId } = data;
     const event = await Event.findByPk(id);
     if (event) {
-        event.event_title = event_title;
-        event.event_description = event_description;
+        event.eventTitle = eventTitle;
+        event.eventDescription = eventDescription;
         event.event_date = event_date;
-        event.event_address = event_address;
-        event.event_postal_code = event_postal_code;
-        event.province_id = province_id;
-        event.category_id = category_id;
+        event.eventAddress = eventAddress;
+        event.eventPostalCode = eventPostalCode;
+        event.provinceId = provinceId;
+        event.categoryId = categoryId;
 
         await event.save();
         return event;
@@ -49,18 +49,18 @@ const update = async (id, data) => {
 }
 
 const modify = async (id, data) => {
-    const {event_title,event_description, event_date, event_address, event_postal_code, province_id, user_id, category_id } = data;
+    const {eventTitle,eventDescription, event_date, eventAddress, eventPostalCode, provinceId, categoryId } = data;
     const event = await Event.findByPk(id);
     if (!event) {
         return null;
     }
-    event.event_title = event_title || event.event_title;
-    event.event_description = event_description || event.event_description;
+    event.eventTitle = eventTitle || event.eventTitle;
+    event.eventDescription = eventDescription || event.eventDescription;
     event.event_date = event_date || event.event_date;
-    event.event_address = event_address || event.event_address;
-    event.event_postal_code = event_postal_code || event.event_postal_code;
-    event.province_id = province_id || event.province_id;
-    event.category_id = category_id || event.category_id;
+    event.eventAddress = eventAddress || event.eventAddress;
+    event.eventPostalCode = eventPostalCode || event.eventPostalCode;
+    event.provinceId = provinceId || event.provinceId;
+    event.categoryId = categoryId || event.categoryId;
 
     await event.save();
     return event;
