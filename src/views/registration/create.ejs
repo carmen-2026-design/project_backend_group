@@ -4,17 +4,17 @@
 
 <form action="/registration" method="post">
 
-    <label for="user-id">ID del usuario</label>
-    <input type="number" name="user-id" id="user-id" required>
+    <label for="userId">ID del usuario</label>
+    <input type="number" name="userId" id="userId" required>
 
-    <label for="event-id">ID del evento</label>
-    <input type="number" name="event-id" id="event-id" required>
+    <label for="eventId">ID del evento</label>
+    <input type="number" name="eventId" id="eventId" required>
 
-    <label for="registration-people">Número de personas</label>
-    <input type="number" name="registration-people" id="registration-people" min="1" value="1">
+    <label for="registrationPeople">Número de personas</label>
+    <input type="number" name="registrationPeople" id="registrationPeople" min="1" value="1">
 
-    <label for="registration-status">Estado de inscripción</label>
-    <select name="registration-status" id="registration-status">
+    <label for="registrationStatus">Estado de inscripción</label>
+    <select name="registrationStatus" id="registrationStatus">
         <% statuses.forEach(status => { %>
             <option value="<%= status %>"><%= status %></option>
         <% }) %>
