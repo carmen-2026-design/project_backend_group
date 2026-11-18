@@ -17,12 +17,13 @@
 }
 %>
 
-<p>Evento: <%= registration.event?.eventTitle %></p>
-
 <form action="/registration/<%= registration.registrationId %>/edit" method="post">
 
+    <p>Evento: <strong><%= registration.event?.eventTitle %></strong></p>
+
     <label for="registrationPeople">Número de personas</label>
-    <input type="number" name="registrationPeople" id="registrationPeople" min="1" max="10" value="<%= registration.registrationPeople %>" required>
+    <input type="number" name="registrationPeople" id="registrationPeople" min="1" max="10"
+        value="<%= registration.registrationPeople %>" required>
 
     <button>Actualizar</button>
 

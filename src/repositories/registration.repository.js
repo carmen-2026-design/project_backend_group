@@ -20,7 +20,7 @@ const getAll = async (userId = null) => {
         where,
         include: {
             model: Event,
-            as: "Event",
+            as: "event",
             attributes: ["eventTitle", "eventDescription"]
 
         }
@@ -33,7 +33,7 @@ const getById = async (id) => {
     const registration = await Registration.findByPk(id, {
         include: {
             model: Event,
-            as: "Event",
+            as: "event",
             attributes: ["eventTitle", "eventDescription"]
 
         }
