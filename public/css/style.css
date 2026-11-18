@@ -58,10 +58,14 @@ nav {
     gap: 20px;
 }
 
-nav h1 {
+nav h1>a {
     font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: -0.5px;
+}
+
+nav h1>a:hover {
+    color: var(--color-blanco);
 }
 
 nav ul {
@@ -74,7 +78,7 @@ nav ul {
 nav a {
     color: var(--color-blanco);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 500;
     transition: color 0.2s ease;
 }
@@ -102,9 +106,14 @@ article {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-article:hover {
+ article:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(23, 36, 58, 0.1);
+}
+
+article.home-card:hover {
+    transform:none;
+    box-shadow: none;
 }
 
 article h3 {
@@ -293,11 +302,6 @@ article h3 {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.home-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 30px rgba(22, 30, 46, 0.35);
-}
-
 /* Título principal */
 .home-title {
     font-size: 3rem;
@@ -316,6 +320,7 @@ article h3 {
     line-height: 1.5;
 }
 
+
 footer {
     margin-top: auto;
     font-size: 1.05rem;   /* Aumenta un poco el tamaño de la letra (por defecto suele ser 1rem / 16px) */
@@ -333,6 +338,7 @@ p.error, p.message {
     font-size: 0.95rem;
     font-weight: 500;
     box-sizing: border-box;
+    margin-top: 2rem;
 }
 
 /* Alerta de error (rojo suave acorde a tus tarjetas) */
@@ -349,7 +355,7 @@ p.message {
     background-color: #f0fdf4;
     color: #166534;
     border: 1px solid #bbf7d0;
-    border-left: 5px solid #22c55e;
+    border: 1px solid #22c55e;
     box-shadow: 0 4px 12px rgba(34, 197, 94, 0.08);
 }
 
