@@ -10,7 +10,7 @@ function redirect(res,url,data = {}){
 }
 
 const registerForm = async(req, res) => {
-    res.render("auth/register")
+    res.render("auth/register", { query: req.query })
 }
 
 const register = async (req,res)=>{
@@ -45,7 +45,7 @@ const register = async (req,res)=>{
 }
 
 const loginForm = async (req, res) => {
-    res.render("auth/login")
+    res.render("auth/login", { query: req.query })
 }
 
 const login = async (req,res)=>{
@@ -61,7 +61,7 @@ const login = async (req,res)=>{
         const compare = await bcrypt.compare(userPassword, user.userPassword);
         console.log(compare);
         if (!compare){
-            return redirect(res, "auth/login", {error:"Credenciales incorrectas"})
+            return redirect(res, "/auth/login", {error:"Credenciales incorrectas"})
         }
         req.session.userLogin = {userId:user.userId, userName:user.userName, userRole:user.userRole};
         redirect(res, "/", {message:"El usuario se ha logeado correctamente"})
