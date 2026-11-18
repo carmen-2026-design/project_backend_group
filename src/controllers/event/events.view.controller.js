@@ -1,6 +1,7 @@
 
 import eventRepository from "../../repositories/event.repository.js";
 import provinceRepository from "../../repositories/province.repository.js";
+import registrationRepository from "../../repositories/registration.repository.js";
 import categoryRepository from "../../repositories/category.repository.js";
 
 
@@ -76,7 +77,40 @@ const remove =async (req,res)=>{
 }
 
 
+// ------------------ Inscripción del usuario logueado ------------
+// Registra al usuario en el evento sin cambiar de pantalla (204 No Content)
+const register = async (req, res) => {
+    const userLogin = req.session?.userLogin;
+    if (!userLogin) {
+        return res.sendStatus(401);
+    }
+    const eventId = parseInt(req.params.id);
+    const event = await eventRepository.getById(eventId);
+    if (!event) {
+        return res.sendStatus(404);
+    }
+    const existing = await registrationRepository.getByUserAndEvent(userLogin.userId, eventId);
+    if (!existing) {
+        await registrationRepository.create({
+            userId: userLogin.userId,
+            eventId,
+            registrationPeople: 1,
+            registrationStatus: "registered"
+        });
+    } else if (existing.registrationStatus === "cancelled") {
+        // si había cancelado, se reactiva la inscripción
+        await registrationRepository.modify(existing.registrationId, {
+            registrationStatus: "registered"
+        });
+        existing.registrationCancelDate = null;
+        await existing.save();
+    }
+    res.sendStatus(204);
+}
+
+
 export default {
+    register,
     create,
     getAll,
     getById,

@@ -28,6 +28,9 @@ router.get("/:id/edit",eventViewController.updateForm);
 // endpoint para cambiar dato por completo
 router.post("/:id/edit",eventViewController.update)
 
+// ------------------ Inscribirse (usuario logueado)
+router.post("/:id/register",eventViewController.register);
+
 // ------------------------ D (Delete)------------
 router.post("/:id/delete",eventViewController.remove)
 
