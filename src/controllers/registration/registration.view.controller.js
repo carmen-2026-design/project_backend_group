@@ -77,7 +77,7 @@ const update = async (req, res) => {
     const id = parseInt(req.params.id);
     const registration = await registrationRepository.getById(id);
 
-    if (!registration || !canAccess(req.session.user, registration)) {
+    if (!registration || !canAccess(getSessionUser(req), registration)) {
         return res.redirect("/registration");
     }
 
