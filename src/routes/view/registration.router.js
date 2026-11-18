@@ -34,7 +34,7 @@ router.post("/:id/edit",registrationViewController.update)
 // ------------------------ D (Delete)------------
 
 
-router.post("/:id/delete",registrationViewController.remove)
+router.post("/:id/cancel",registrationViewController.cancel);
 
 
 export default router;

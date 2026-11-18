@@ -35,7 +35,12 @@ const createForm = (req, res) => {
 
 // endpoint lista de datos
 const getAll = async (req, res) => {
-    const registrations = await registrationRepository.getAll();
+    const { userId, role } = req.session.user;
+
+    const registrations = role === "admin"
+        ? await registrationRepository.getAll()
+        : await registrationRepository.getAll(userId);
+
     res.render("registration/list", { registrations });
 };
 
@@ -51,30 +56,41 @@ const getById = async (req, res) => {
 
 // endpoint para cambiar dato por completo
 const update = async (req, res) => {
-    const id = req.params.id;
-    const registration = await registrationRepository.update(id, req.body);
+    const id = parseInt(req.params.id);
+    const registration = await registrationRepository.getById(id);
 
-    if (registration) {
-        res.redirect("/registration/" + registration.registrationId);
-    } else {
-        res.redirect("/registration");
+    if (!registration || !canAccess(req.session.user, registration)) {
+        return res.redirect("/registration");
     }
+
+    const { registrationPeople } = req.body;
+    await registrationRepository.updatePeople(id, registrationPeople);
+
+    res.redirect("/registration/" + id);
 };
 
 const updateForm = async (req, res) => {
     const id = parseInt(req.params.id);
     const registration = await registrationRepository.getById(id);
-    const statuses = ["registered", "cancelled"];
 
-    res.render("registration/update", { registration, statuses });
+    if (!registration || !canAccess(req.session.user, registration)) {
+        return res.redirect("/registration");
+    }
+
+    res.render("registration/update", { registration, query: req.query });
 };
 
+// ------------------------ D (cancel)------------
 
-// ------------------------ D (Delete)------------
-
-const remove = async (req, res) => {
+const cancel = async (req, res) => {
     const id = parseInt(req.params.id);
-    const registration = await registrationRepository.remove(id);
+    const registration = await registrationRepository.getById(id);
+
+    if (!registration || !canAccess(req.session.user, registration)) {
+        return res.redirect("/registration");
+    }
+
+    await registrationRepository.cancel(id);
     res.redirect("/registration");
 };
 
@@ -86,5 +102,5 @@ export default {
     update,
     createForm,
     updateForm,
-    remove
+    cancel
 };
