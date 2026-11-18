@@ -85,12 +85,19 @@ INSERT INTO provinces (province_id, province_name) VALUES
 -- -------------------------------------------------------------
 --  CATEGORIES
 -- -------------------------------------------------------------
+-- INSERT INTO categories (category_name, category_description) VALUES
+--   ('Sports',     'Running, football, hiking and other sports meetups'),
+--   ('Music',      'Concerts, jam sessions and music events'),
+--   ('Technology', 'Talks, workshops and tech meetups'),
+--   ('Culture',    'Museums, theatre, book clubs and exhibitions'),
+--   ('Food',       'Tastings, cooking classes and dinners');
+
 INSERT INTO categories (category_name, category_description) VALUES
-  ('Sports',     'Running, football, hiking and other sports meetups'),
-  ('Music',      'Concerts, jam sessions and music events'),
-  ('Technology', 'Talks, workshops and tech meetups'),
-  ('Culture',    'Museums, theatre, book clubs and exhibitions'),
-  ('Food',       'Tastings, cooking classes and dinners');
+  ('Deportes',   'Carreras, fútbol, senderismo y otros encuentros deportivos'),
+  ('Música',     'Conciertos, improvisaciones musicales y eventos musicales'),
+  ('Tecnología', 'Charlas, talleres y encuentros tecnológicos'),
+  ('Cultura',    'Museos, teatro, clubes de lectura y exposiciones'),
+  ('Gastronomía','Degustaciones, clases de cocina y cenas');
 
 -- -------------------------------------------------------------
 --  USERS (ids 1..8, admin is id 1)
@@ -111,35 +118,35 @@ INSERT INTO users (user_name, user_email, user_password, user_role) VALUES
 --  event_postal_code matches the province of each event.
 -- -------------------------------------------------------------
 INSERT INTO events (event_title, event_description, event_date, event_address, event_postal_code, province_id, user_id, category_id) VALUES
-  ('Sunday 10K run in Retiro Park',
-   'Relaxed-pace group run around Retiro. All levels welcome.',
+  ('Carrera popular de 10K en el Parque de Retiro',
+   'Carrera en grupo a ritmo relajado por el Retiro. Todos los niveles son bienvenidos.',
    '2026-11-22 09:00:00', 'Puerta de Alcalá, Plaza de la Independencia', '28001', 28, 2, 1),
-  ('Acoustic jam session',
-   'Bring your guitar, cajón or just your voice. Open mic from 20:00.',
+  ('Sesión de improvisación acústica',
+   'Trae tu guitarra, cajón o simplemente tu voz. Micrófono abierto a partir de las 20:00.',
    '2026-11-27 20:00:00', 'Carrer de Blai 25', '08004', 8, 3, 2),
-  ('Intro to Node.js and Express workshop',
-   'Hands-on workshop: build your first REST API. Bring your laptop.',
+  ('Taller de introducción a Node.js y Express',
+   'Taller práctico: construye tu primera API REST. Trae tu portátil.',
    '2026-12-03 18:30:00', 'Calle de la Paz 10', '46003', 46, 4, 3),
-  ('Book club: monthly meeting',
-   'This month we discuss a classic Spanish novel. Coffee included.',
+  ('Club de lectura: reunión mensual',
+   'Este mes debatimos sobre una novela clásica española. Café incluido.',
    '2026-12-05 17:00:00', 'Calle Sierpes 48', '41004', 41, 5, 4),
-  ('Tapas tasting route',
-   'Walking route through five tapas bars in the old town.',
+  ('Ruta de cata de tapas',
+   'Ruta a pie por cinco bares de tapas en el casco antiguo.',
    '2026-12-12 13:00:00', 'Calle Marqués de Larios 1', '29005', 29, 2, 5),
-  ('Hiking trail to Monte Artxanda',
-   'Medium difficulty hike with views over the city. About 3 hours.',
+  ('Ruta de senderismo al Monte Artxanda',
+   'Ruta de dificultad media con vistas a la ciudad. Alrededor de 3 horas.',
    '2026-12-13 10:00:00', 'Funicular de Artxanda, Plaza del Funicular', '48007', 48, 6, 1),
-  ('Indie bands night',
-   'Three local indie bands live. Doors open at 21:00.',
+  ('Noche de bandas independientes',
+   'Tres bandas locales de música independiente en directo. Apertura de puertas a las 21:00.',
    '2026-12-18 21:30:00', 'Calle del Coso 120', '50001', 50, 7, 2),
-  ('Christmas cooking class',
-   'Learn three traditional Christmas recipes with a local chef.',
+  ('Clase de cocina navideña',
+   'Aprende tres recetas tradicionales de Navidad con un cocinero local.',
    '2026-12-20 11:00:00', 'Calle Real 75', '15003', 15, 1, 5),
-  ('Guided visit to the Alhambra',
-   'Guided tour of the Nasrid Palaces and gardens.',
+  ('Visita guiada a la Alhambra',
+   'Visita guiada por los Palacios Nazaríes y los jardines.',
    '2026-10-17 10:00:00', 'Calle Real de la Alhambra s/n', '18009', 18, 8, 4),
-  ('Frontend developers meetup',
-   'Lightning talks about CSS, accessibility and web performance.',
+  ('Encuentro de desarrolladores frontend',
+   'Charlas cortas sobre CSS, accesibilidad y rendimiento web.',
    '2026-10-29 19:00:00', 'Calle Uría 20', '33003', 33, 3, 3);
 
 -- -------------------------------------------------------------
