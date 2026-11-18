@@ -4,23 +4,22 @@
 
     <p>Usuario: <%= registration.userId %></p>
 
-    <p>Evento: <%= registration.eventId %></p>
+    <p>Evento: <%= registration.event?.eventTitle %></p>
+
+    <p>Descripción: <%= registration.event?.eventDescription || "Sin descripción" %></p>
 
     <p>Número de personas: <%= registration.registrationPeople %></p>
 
     <p>Estado: <%= registration.registrationStatus %></p>
 
-    <p>
-        Fecha de cancelación:
-        <%= registration.registrationCancelDate || "No cancelada" %>
-    </p>
-
     <a href="/registration/<%= registration.registrationId %>">Visitar</a>
     <form method="get" action="/registration/<%= registration.registrationId %>/edit">
         <button>Editar</button>
     </form>
-    <form method="post" action="/registration/<%= registration.registrationId %>/delete">
-        <button>Eliminar</button>
+<% if (registration.registrationStatus === "registered") { %>
+    <form method="post" action="/registration/<%= registration.registrationId %>/cancel">
+        <button>Cancelar</button>
     </form>
+<% } %>
 
 </article>
