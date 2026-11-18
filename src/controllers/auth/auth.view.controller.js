@@ -14,13 +14,13 @@ const registerForm = async(req, res) => {
 }
 
 const register = async (req,res)=>{
-    const {userName,userEmail,userPassword} = req.body;
+    const {userName,userEmail,userPassword, userPasswordRepeat} = req.body;
     const userRole = "user";
 
-    // if (userPassword !== userPasswordRepeat){
-    //     redirect(res, "/auth/register", {error:"Las contraseñas no coinciden"})
-    //     return;
-    // }
+    if (userPassword !== userPasswordRepeat){
+        redirect(res, "/auth/register", {error:"Las contraseñas no coinciden"})
+        return;
+    }
 
     try {
 
@@ -49,7 +49,7 @@ const loginForm = async (req, res) => {
 }
 
 const login = async (req,res)=>{
-    const {userEmail,userPassword} = req.body;
+    const {userEmail,userPassword,userRole} = req.body;
 
     try {
 
@@ -57,13 +57,13 @@ const login = async (req,res)=>{
         if (!user){
             return redirect(res, "/auth/login", {error:"Credenciales incorrectas"})
         }
-        console.log(user, userPassword);
+        console.log(user, userPassword, userRole);
         const compare = await bcrypt.compare(userPassword, user.userPassword);
         console.log(compare);
         if (!compare){
             return redirect(res, "auth/login", {error:"Credenciales incorrectas"})
         }
-        req.session.user = {userId:user.userId, role:user.userRole};
+        req.session.userLogin = {userId:user.userId, userName:user.userName, userRole:user.userRole};
         redirect(res, "/", {message:"El usuario se ha logeado correctamente"})
     }
     catch (error){

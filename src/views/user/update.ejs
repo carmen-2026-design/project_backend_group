@@ -20,23 +20,26 @@
 <form action="/user/<%= user.userId %>/edit" method="post">
 
     <label for="userName">Nombre de usuario</label>
-    <input type="text" name="userName" id="userName" value="<%= user.userName %>">
+    <input type="text" name="userName" id="userName" value="<%= user.userName %>" required>
 
     <label for="userEmail">Email</label>
-    <input type="email" id="userEmail" name="userEmail" value="<%= user.userEmail %>">
-
-    <label for="userRole">Rol</label>
-    <select name="userRole" id="role">
-        <option value="user" <%= user.userRole === 'user' ? 'selected' : '' %>>user</option>
-        <option value="admin" <%= user.userRole === 'admin' ? 'selected' : '' %>>admin</option>
-    </select>
-
+    <input type="email" id="userEmail" name="userEmail" value="<%= user.userEmail %>" required>
+    
     <label for="userPassword">Contraseña</label>
-    <input type="password" name="userPassword" id="password" value="<%= user.userPassword %>">
+    <input type="password" name="userPassword" id="password" value="<%= user.userPassword %>" required>
+
+    <label for="userPasswordRepeat">Repetir contraseña</label>
+    <input type="password" name="userPasswordRepeat" id="userPasswordRepeat" value="<%= user.userPassword %>" required>
   
     <button>Actualizar</button>
     
-    <a href="/user">Volver</a>
+    
 </form>
+
+<% if (userLogin.userRole === 'admin') { %>
+    <a href="/user">Volver</a>
+<% } else { %>
+    <a href="/user/<%= user.userId %>">Volver</a>
+<% } %>
 
 <%- include('../layout/footer'); -%>
