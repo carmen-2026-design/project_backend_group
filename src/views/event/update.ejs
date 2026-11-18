@@ -17,8 +17,7 @@
     <label for="provinceId">Provincia</label>
     <select name="provinceId" id="provinceId">
         <% for(province of provinces) { %>
-            <option value="<%=province.provinceId%>" ><%=province.provinceName %> </option>
-       <% } %>
+            <option value="<%= province.provinceId %>" <%= province.provinceId === event.provinceId ? "selected" : "" %>><%= province.provinceName %></option>       <% } %>
     </select>
 
 
@@ -31,7 +30,7 @@
     <label for="categoryId">Categoria</label>
     <select name="categoryId" id="categoryId">
         <% for(category of categories) { %>
-            <option value="<%=category.categoryId%>" ><%=category.categoryName %> </option>
+            <option value="<%= category.categoryId %>" <%= category.categoryId === event.categoryId ? "selected" : "" %>><%= category.categoryName %></option>
        <% } %>
     </select>
 
