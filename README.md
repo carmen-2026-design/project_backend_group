@@ -1,349 +1,358 @@
-# project_backend_group
-Proyecto backend grupal
+# JoinUp — Gestor de eventos y planes
 
-#  Agencia de Superhéroes de Segunda
+JoinUp es una aplicación web para crear eventos y apuntarse a ellos. Cada usuario se registra, ve los eventos que hay, los filtra por categoría y provincia y se inscribe diciendo cuántas personas van. Además hay un usuario administrador que gestiona categorías, usuarios y eventos.
 
-Aplicación web para registrar héroes con poderes poco espectaculares pero muy útiles: **Capitán Wifi**, **Doctor Cargador**, **Señora Táper**…
+La aplicación tiene dos interfaces que comparten la misma lógica:
 
-Cualquiera puede consultar el catálogo; los usuarios registrados crean sus propias identidades secretas (¡pueden tener varias!) y les asignan poderes; el administrador gestiona el catálogo de poderes.
+- una **web** con vistas EJS, para usarla desde el navegador;
+- una **API REST** en JSON, bajo `/api`.
 
-Proyecto didáctico del módulo de Backend: **Node.js + Express + Sequelize + PostgreSQL + EJS + JWT**, todo levantado con **Docker Compose**.
+**Equipo:** Adrián, Carmen, Eder y Pipe.
+
+## Índice
+
+1. [Funcionalidades](#funcionalidades)
+2. [Tecnologías y APIs utilizadas](#tecnologías-y-apis-utilizadas)
+3. [Instalación y despliegue local](#instalación-y-despliegue-local)
+4. [Guía rápida de uso](#guía-rápida-de-uso)
+5. [Base de datos](#base-de-datos)
+6. [Estructura del proyecto](#estructura-del-proyecto)
+7. [Próximas mejoras](#próximas-mejoras)
 
 ---
 
-## Qué vas a practicar
+## Funcionalidades
 
-| Concepto | Dónde aparece |
+- **Registro e inicio de sesión.** Se comprueba que el correo y el nombre de usuario no existan ya. La contraseña se cifra con bcrypt (10 rondas de sal) y el usuario se guarda con rol `user`. Al iniciar sesión se compara la contraseña con el hash usando `bcrypt.compare`.
+- **Eventos.** Se pueden crear, ver, editar y borrar, cada uno con su categoría y su provincia. El listado trae cada evento con su provincia y su categoría en una sola consulta (`include` de Sequelize).
+- **Inscripciones.** Un usuario se apunta a un evento indicando cuántas personas van (de 1 a 10) y ve sus inscripciones junto con el título y la descripción del evento.
+- **Categorías.** Se pueden listar y consultar. Solo el administrador puede crearlas, editarlas y borrarlas.
+- **Gestión de usuarios.** El administrador ve la lista de usuarios y puede eliminar los que no tengan eventos creados.
+- **Roles.** Hay dos: `user` y `admin`.
+
+---
+
+## Tecnologías y APIs utilizadas
+
+### Tecnologías
+
+| Tecnología | Para qué la usamos |
 | --- | --- |
-| MVC + capa de repositorios | `routes → controllers → repositories → models` |
-| Dos interfaces, una lógica | Controladores `web/` (EJS) y `api/` (JSON) usan los mismos repositorios |
-| Relación 1:N | Un `User` crea muchos `Hero` |
-| Relación N:M | `Hero` ↔ `Power` a través de `hero_powers` |
-| Autenticación | Registro con bcrypt, login con JWT |
-| Autorización por rol | Solo `admin` gestiona poderes |
-| Autorización por propiedad | Solo el creador (o el admin) edita o borra un héroe |
+| Node.js 20 | Ejecutar el servidor, con módulos ES (`import` / `export`) |
+| Express 5 | Rutas y peticiones |
+| EJS | Plantillas HTML para las vistas, con partes reutilizables |
+| Sequelize | ORM para hablar con la base de datos |
+| PostgreSQL 18 | Base de datos relacional |
+| bcrypt | Cifrar las contraseñas |
+| express-session | Guardar quién ha iniciado sesión |
+| cors | Permitir peticiones a la API desde otros orígenes |
+| dotenv | Variables de entorno (`.env`) |
+| nodemon | Reiniciar el servidor al guardar un archivo |
+| Docker y Docker Compose | Ejecutar la app, la base de datos y pgAdmin en contenedores |
+| pgAdmin 4 | Consultar y administrar la base de datos desde el navegador |
+| JSDoc | Generar la documentación del código |
+| Git y GitHub | Trabajar en equipo y repartir el código |
 
----
+### APIs
 
-## Requisitos previos
+La aplicación no consume APIs externas: todos los datos salen de su propia base de datos PostgreSQL.
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (o Docker Engine + plugin Compose)
-- Un cliente HTTP para probar la API: curl, Thunder Client, Postman o Bruno
+Sí expone su propia **API REST**, que devuelve JSON bajo `/api`. Se puede probar con curl, Postman o Thunder Client.
 
-No hace falta instalar PostgreSQL. Node.js en local solo es necesario si quieres que el editor tenga autocompletado de las dependencias.
-
----
-
-## Puesta en marcha
-
-### Servicios
-
-| Servicio | Qué es | URL |
+| Método | Ruta | Descripción |
 | --- | --- | --- |
-| `app` | Node + Express con nodemon (recarga al guardar) | <http://localhost:3000> |
-| `db` | PostgreSQL 16, se carga solo con `init-db/` | `localhost:5432` |
-| `adminer` | Cliente web para ver la base de datos | <http://localhost:8080> |
+| GET | `/api/user` · `/api/event` | Listado |
+| GET | `/api/user/:id` · `/api/event/:id` | Detalle |
+| POST | `/api/user` · `/api/event` | Crear |
+| PUT | `/api/user/:id` · `/api/event/:id` | Reemplazar el recurso completo |
+| PATCH | `/api/user/:id` · `/api/event/:id` | Modificar solo los campos enviados |
+| DELETE | `/api/user/:id` · `/api/event/:id` | Borrar |
 
-### 1. Variables de entorno
-
-```bash
-cp .env.example .env
-```
-
-El `.env` no se sube a Git. Docker Compose lo usa tanto para crear la base de datos como para configurar la app. Dentro de Docker, la app se conecta a la BD con `DB_HOST=db` (el nombre del servicio), que ya fija `docker-compose.yml`.
-
-### 2. Dependencias y scripts
-
-El `package.json` necesita estas dependencias:
+Ejemplo:
 
 ```bash
-npm install express sequelize pg pg-hstore ejs bcrypt jsonwebtoken dotenv cookie-parser
-npm install -D nodemon
+curl http://localhost:3000/api/event
 ```
 
-Y estos scripts:
+---
 
-```json
-{
-  "type": "module",
-  "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon --legacy-watch src/index.js"
-  }
-}
+## Instalación y despliegue local
+
+### Requisitos
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (o Docker Engine con el plugin Compose)
+- Git
+
+No hace falta instalar Node.js ni PostgreSQL en local: todo corre dentro de Docker.
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/carmen-2026-design/project_backend_group.git
+cd project_backend_group
 ```
 
-> `--legacy-watch` hace que nodemon detecte los cambios a través del volumen de Docker en Windows y macOS.
+### 2. Crear el `.env`
 
-### 3. Arrancar
+Crea un archivo `.env` en la raíz con estas variables (los valores son de ejemplo):
+
+```env
+# Aplicación
+APP_HOST=joinup_app
+APP_PORT=3000
+SESSION_SECRET=cambia-este-secreto
+
+# PostgreSQL
+POSTGRES_HOST=joinup_db
+POSTGRES_PORT=5432
+POSTGRES_USER=joinup
+POSTGRES_PASSWORD=joinup
+POSTGRES_DB=joinup
+
+# pgAdmin
+PGADMIN_HOST=joinup_pgadmin
+PGADMIN_EMAIL=admin@joinup.com
+PGADMIN_PASSWORD=admin
+PGADMIN_PORT=8080
+```
+
+> El `.env` no se sube a Git.
+>
+> Dentro de Docker, la app se conecta a la base de datos usando `POSTGRES_HOST`, que es el nombre del contenedor de PostgreSQL, no `localhost`.
+
+### 3. Levantar los contenedores
 
 ```bash
 docker compose up --build
 ```
 
-La primera vez, PostgreSQL ejecuta automáticamente los scripts de `init-db/` por orden alfabético:
+Al arrancar pasa lo siguiente:
 
-1. `01-schema.sql`: crea las tablas.
-2. `02-seed.sql`: carga los datos de ejemplo.
+1. nodemon lanza `node src/index.js`.
+2. Se cargan las variables del `.env`.
+3. La app comprueba la conexión con PostgreSQL. Si falla, lo reintenta hasta 5 veces, cada 5 segundos.
+4. Si todo va bien, en los logs aparecen los mensajes "Conexión establecida con la base de datos" y "Aplicación en marcha".
 
-Abre <http://localhost:3000>.
+La primera vez, PostgreSQL ejecuta los scripts de la carpeta `sql/` por orden alfabético:
+
+1. `01_schema.sql` crea las tablas.
+2. `02_seed.sql` carga los datos de prueba.
+
+### 4. Abrir la aplicación
+
+| Servicio | Qué es | URL |
+| --- | --- | --- |
+| `app` | Node + Express con nodemon | <http://localhost:3000> (o el `APP_PORT` que pongas) |
+| `postgres` | PostgreSQL 18 | Solo accesible dentro de Docker |
+| `pgadmin` | Cliente web de la base de datos | <http://localhost:8080> (o el `PGADMIN_PORT` que pongas) |
+
+Para conectarte desde pgAdmin, registra un servidor con:
+
+- **Host:** el valor de `POSTGRES_HOST`
+- **Puerto:** `5432`
+- **Usuario y contraseña:** los del `.env`
 
 ### Comandos habituales
 
 | Comando | Para qué |
 | --- | --- |
-| `docker compose up --build` | Arrancar (y reconstruir si cambió `package.json`) |
+| `docker compose up --build` | Arrancar y reconstruir si cambió `package.json` |
 | `docker compose up -d` | Arrancar en segundo plano |
 | `docker compose logs -f app` | Ver los logs de la app |
-| `docker compose down` | Parar. **Los datos se conservan** |
-| `docker compose down -v` | Parar y **borrar la base de datos**. Al volver a arrancar se recarga desde `init-db/` |
-| `docker compose exec db psql -U agencia -d agencia_heroes` | Abrir una consola SQL |
+| `docker compose down` | Parar los contenedores. **Los datos se conservan** |
+| `docker compose down -v` | Parar y **borrar la base de datos**. Al volver a arrancar se recarga desde `sql/` |
 | `docker compose exec app npm install <paquete>` | Instalar un paquete dentro del contenedor |
+| `npm run docs` | Generar la documentación con JSDoc |
 
-> ⚠️ Los scripts de `init-db/` **solo se ejecutan si el volumen de datos está vacío**. Si cambias el esquema o los datos, necesitas `docker compose down -v` para que se vuelvan a aplicar.
-
-Para restaurar los datos de ejemplo sin borrar el volumen:
-
-```bash
-docker compose exec -T db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"' < init-db/02-seed.sql
-```
-
-### Conectarse a la base de datos
-
-- **Adminer** (<http://localhost:8080>): Sistema `PostgreSQL`, Servidor `db`, usuario, contraseña y base de datos los del `.env`.
-- **DBeaver, pgAdmin o la extensión de VS Code**: host `localhost`, puerto `5432`.
+> ⚠️ Los scripts de `sql/` **solo se ejecutan si el volumen de datos está vacío**. Si cambias el esquema o los datos de prueba, ejecuta `docker compose down -v` antes de volver a arrancar.
 
 ---
 
-## Usuarios de prueba
+## Guía rápida de uso
 
-| Usuario | Email | Contraseña | Rol | Héroes |
-| --- | --- | --- | --- | --- |
-| admin | admin@agencia.test | `admin1234` | admin | Capitán Obvio |
-| paco | paco@agencia.test | `heroe1234` | user | Capitán Wifi, El Fantasma del Trastero, El Hombre que Llega Puntual |
-| marta | marta@agencia.test | `heroe1234` | user | La Mujer que Siempre Encuentra Aparcamiento, Doctor Cargador, El Calcetín Desparejado |
-| lucia | lucia@agencia.test | `heroe1234` | user | Señora Táper, Mister Mute, Abuela Radar |
-| pepe | pepe@agencia.test | `heroe1234` | user | *(ninguno)* |
+### Usuarios de prueba
 
-El poder **Abrir botes imposibles** no lo tiene ningún héroe: sirve para comprobar que tus consultas no pierden registros sin relaciones.
+| Nombre | Email | Contraseña | Rol |
+| --- | --- | --- | --- |
+| Admin JoinUp | admin@joinup.com | `admin` | admin |
+| Laura Martínez | laura.martinez@example.com | `user` | user |
+| Carlos Gómez | carlos.gomez@example.com | `user` | user |
+| Lucía Fernández | lucia.fernandez@example.com | `user` | user |
 
----
+Los datos de prueba incluyen:
 
-## Modelo de datos
+- 8 usuarios
+- las 52 provincias
+- 5 categorías: Sports, Music, Technology, Culture y Food
+- 10 eventos, dos de ellos ya pasados
+- 18 inscripciones, tres de ellas canceladas
 
-```
-users 1 ────< heroes >────< hero_powers >────< powers
-        crea              (N:M)
-```
+### Como usuario
 
-| Tabla | Campos |
+1. **Crea una cuenta** en `/auth/register` o entra con un usuario de prueba en `/auth/login`.
+2. **Explora los eventos** en `/event`. Cada evento muestra su fecha, dirección, provincia y categoría.
+3. **Apúntate a un evento** desde `/registration/new`. Indica cuántas personas vais, entre 1 y 10.
+4. **Revisa tus inscripciones** en `/registration`. Desde ahí puedes editarlas o cancelarlas.
+5. **Publica tu propio plan** en `/event/new`. Tendrás que indicar título, fecha, dirección, código postal de 5 dígitos, provincia y categoría.
+6. **Cierra sesión** en `/auth/logout`.
+
+### Como administrador
+
+Entra con `admin@joinup.com` / `admin`. Además de todo lo anterior, puedes:
+
+1. **Gestionar categorías** en `/category`: crearlas (`/category/new`), editarlas y borrarlas. Una categoría con eventos no se puede borrar.
+2. **Gestionar usuarios** en `/user`: verlos y eliminar los que no tengan eventos creados.
+3. **Gestionar cualquier evento** en `/event`: editarlo o borrarlo.
+
+### Rutas web
+
+| Ruta | Qué hace |
 | --- | --- |
-| `users` | id, username, email, password (hash), role (`admin` \| `user`) |
-| `heroes` | id, name, description, utility_level (1–10), user_id → users |
-| `powers` | id, name, description |
-| `hero_powers` | hero_id → heroes, power_id → powers (PK compuesta) |
+| `/auth/register` · `/auth/login` · `/auth/logout` | Registro, inicio y cierre de sesión |
+| `/event` | Listado, detalle (`/:id`), crear (`/new`), editar (`/:id/edit`) y borrar (`/:id/delete`) eventos |
+| `/registration` | Listado, detalle, crear, editar y borrar inscripciones |
+| `/category` | Listado y detalle. Crear, editar y borrar: solo admin |
+| `/user` | Listado, detalle, crear, editar y borrar usuarios |
+
+Los formularios HTML solo envían GET y POST, así que editar y borrar se hacen con rutas POST (`/:id/edit`, `/:id/delete`).
+
+---
+
+## Base de datos
+
+```mermaid
+classDiagram
+    direction LR
+
+    class User {
+        +int userId PK
+        +string userName UQ
+        +string userEmail UQ
+        +string userPassword «hash bcrypt»
+        +enum userRole : admin | user
+        +date createdAt
+        +date updatedAt
+        +beforeCreate() cifra la contraseña
+        +beforeUpdate() cifra si cambia
+    }
+
+    class Event {
+        +int eventId PK
+        +string eventTitle UQ
+        +string eventDescription
+        +date eventDate
+        +string eventAddress
+        +string eventPostalCode «5 dígitos»
+        +int provinceId FK
+        +int userId FK
+        +int categoryId FK
+        +date createdAt
+        +date updatedAt
+    }
+
+    class Category {
+        +int categoryId PK
+        +string categoryName UQ
+        +string categoryDescription
+        +date createdAt
+        +date updatedAt
+    }
+
+    class Province {
+        +int provinceId PK «código INE»
+        +string provinceName UQ
+        +date createdAt
+        +date updatedAt
+    }
+
+    class Registration {
+        +int registrationId PK
+        +int userId FK
+        +int eventId FK
+        +int registrationPeople «1..10»
+        +enum registrationStatus : registered | cancelled
+        +date registrationCancelDate
+        +date createdAt
+        +date updatedAt
+    }
+
+    User "1" --> "0..*" Event : crea (owner)
+    Category "1" --> "0..*" Event : clasifica
+    Province "1" --> "0..*" Event : ubica
+    User "1" --> "0..*" Registration : se inscribe
+    Event "1" --> "0..*" Registration : recibe
+```
+
+| Tabla | Campos principales | Relaciones |
+| --- | --- | --- |
+| `users` | `user_id`, `user_name`, `user_email` (único), `user_password` (hash bcrypt), `user_role` (`admin` \| `user`) | Un usuario crea muchos eventos y tiene muchas inscripciones |
+| `categories` | `category_id`, `category_name` (único), `category_description` | Una categoría tiene muchos eventos |
+| `provinces` | `province_id` (código INE), `province_name` | Una provincia tiene muchos eventos |
+| `events` | `event_id`, `event_title` (único), `event_description`, `event_date`, `event_address`, `event_postal_code`, `province_id`, `user_id`, `category_id` | Pertenece a una provincia, una categoría y un usuario creador |
+| `registrations` | `registration_id`, `user_id`, `event_id`, `registration_people` (1–10), `registration_status` (`registered` \| `cancelled`), `registration_cancel_date` | Une usuarios y eventos (muchos a muchos) |
 
 Todas las tablas tienen `created_at` y `updated_at`.
 
-### Configuración de Sequelize para que encaje con el esquema
+La propia base de datos aplica estas reglas:
 
-Las tablas están en `snake_case` y en plural; en JavaScript usamos `camelCase`. Configúralo así:
+- **Código postal.** Tiene que tener 5 dígitos y se guarda como texto para conservar el cero inicial (por ejemplo, `08001`).
+- **Inscripciones.** Un usuario no puede inscribirse dos veces al mismo evento (`UNIQUE (user_id, event_id)`).
+- **Borrado de eventos.** Las claves foráneas de `events` usan `ON DELETE RESTRICT`: PostgreSQL no deja borrar una categoría, una provincia o un usuario que todavía tenga eventos.
+- **Borrado de inscripciones.** Al borrar un evento o un usuario se borran también sus inscripciones (`ON DELETE CASCADE`).
 
-```javascript
-// src/config/database.js
-import { Sequelize } from 'sequelize'
-
-export const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: 'postgres',
-    logging: false,
-    define: {
-      underscored: true   // utilityLevel <-> utility_level, createdAt <-> created_at
-    }
-  }
-)
-```
-
-```javascript
-// src/models/hero.model.js (ejemplo)
-export const Hero = sequelize.define('Hero', {
-  name:         { type: DataTypes.STRING(80), allowNull: false, unique: true },
-  description:  { type: DataTypes.TEXT },
-  utilityLevel: { type: DataTypes.SMALLINT, allowNull: false, defaultValue: 5,
-                  validate: { min: 1, max: 10 } }
-}, { tableName: 'heroes' })
-```
-
-```javascript
-// src/models/index.js
-User.hasMany(Hero, { foreignKey: 'userId', as: 'heroes' })
-Hero.belongsTo(User, { foreignKey: 'userId', as: 'creator' })
-
-Hero.belongsToMany(Power, { through: 'hero_powers', foreignKey: 'heroId', otherKey: 'powerId', as: 'powers' })
-Power.belongsToMany(Hero, { through: 'hero_powers', foreignKey: 'powerId', otherKey: 'heroId', as: 'heroes' })
-```
-
-> ⚠️ Como el esquema lo crea `init-db/01-schema.sql`, **no** uses `sequelize.sync({ force: true })`: borraría las tablas.
+En PostgreSQL las columnas están en `snake_case` (`event_title`) y Sequelize las convierte a `camelCase` (`eventTitle`) en el código.
 
 ---
 
 ## Estructura del proyecto
 
 ```
-agencia-heroes/
-├── init-db/                    # se ejecutan al crear el contenedor de la BD
-│   ├── 01-schema.sql
-│   └── 02-seed.sql
+project_backend_group/
+├── sql/
+│   ├── 01_schema.sql          # crea las tablas
+│   └── 02_seed.sql            # datos de prueba
+├── public/
+│   └── css/style.css
+├── docs/                      # memoria técnica
 ├── src/
-│   ├── config/
-│   │   └── database.js
-│   ├── models/
-│   │   ├── user.model.js
-│   │   ├── hero.model.js
-│   │   ├── power.model.js
-│   │   └── index.js            # asociaciones
-│   ├── repositories/           # ÚNICA capa que usa los modelos
-│   │   ├── user.repository.js
-│   │   ├── hero.repository.js
-│   │   └── power.repository.js
-│   ├── controllers/
-│   │   ├── api/                # res.json(...)
-│   │   └── web/                # res.render(...) / res.redirect(...)
+│   ├── index.js               # arranca el servidor y comprueba la conexión
+│   ├── config/db.js           # instancia de Sequelize
+│   ├── models/                # User, Event, Category, Registration, Province
+│   ├── repositories/          # consultas a la base de datos con Sequelize
+│   ├── controllers/           # auth, user, category, event, registration
+│   │                          #   *.view.controller.js → res.render()
+│   │                          #   *.api.controller.js  → res.json()
 │   ├── routes/
-│   │   ├── api/
-│   │   └── web/
+│   │   ├── router.js
+│   │   ├── view/              # rutas web (EJS)
+│   │   └── api/               # rutas /api (JSON)
 │   ├── middlewares/
-│   │   ├── auth.middleware.js  # verifyToken, requireRole
-│   │   └── error.middleware.js
-│   ├── views/                  # plantillas EJS
-│   └── index.js
-├── .dockerignore
-├── .env                        # NO se sube a Git
-├── .env.example
-├── .gitignore
-├── docker-compose.yml
+│   │   └── auth.middleware.js # isAuthenticated, isAdmin
+│   ├── utils/errors.js        # traduce errores de Sequelize a mensaje + código HTTP
+│   └── views/                 # plantillas EJS por carpetas
 ├── Dockerfile
-├── package.json
-└── README.md
+├── docker-compose.yml
+├── jsdoc.json
+└── package.json
 ```
 
----
+Cada petición sigue este recorrido:
 
-## API REST
-
-Las rutas protegidas necesitan la cabecera `Authorization: Bearer <token>`.
-
-### Autenticación
-
-| Método | Ruta | Acceso | Descripción |
-| --- | --- | --- | --- |
-| POST | `/api/auth/register` | Público | Crea un usuario con rol `user` |
-| POST | `/api/auth/login` | Público | Devuelve `{ token }` |
-
-### Héroes
-
-| Método | Ruta | Acceso | Descripción |
-| --- | --- | --- | --- |
-| GET | `/api/heroes` | Público | Lista con poderes. Filtro: `?power=<id>` |
-| GET | `/api/heroes/:id` | Público | Detalle con poderes y creador |
-| POST | `/api/heroes` | Usuario | Crea un héroe (el creador sale del token) |
-| PUT | `/api/heroes/:id` | Creador o admin | Actualiza un héroe |
-| DELETE | `/api/heroes/:id` | Creador o admin | Borra un héroe |
-| POST | `/api/heroes/:id/powers/:powerId` | Creador o admin | Asigna un poder |
-| DELETE | `/api/heroes/:id/powers/:powerId` | Creador o admin | Quita un poder |
-| GET | `/api/me/heroes` | Usuario | Mis héroes |
-
-### Poderes
-
-| Método | Ruta | Acceso | Descripción |
-| --- | --- | --- | --- |
-| GET | `/api/powers` | Público | Lista de poderes |
-| GET | `/api/powers/:id` | Público | Poder con los héroes que lo tienen |
-| POST | `/api/powers` | Admin | Crea un poder |
-| PUT | `/api/powers/:id` | Admin | Actualiza un poder |
-| DELETE | `/api/powers/:id` | Admin | Borra un poder |
-
-### Códigos de estado
-
-| Código | Cuándo |
-| --- | --- |
-| 200 / 201 / 204 | OK / creado / borrado sin contenido |
-| 400 | Datos inválidos |
-| 401 | Sin token o token inválido |
-| 403 | Autenticado pero sin permiso |
-| 404 | El recurso no existe |
-| 409 | Nombre repetido |
-
-### Pruébalo con curl
-
-```bash
-# Login
-curl -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"paco@agencia.test","password":"heroe1234"}'
-
-# Guarda el token
-TOKEN=pega-aqui-el-token
-
-# Crear un héroe
-curl -X POST http://localhost:3000/api/heroes \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
-  -d '{"name":"La Desatascadora","description":"Ningún fregadero se le resiste.","utilityLevel":8}'
-
-# Asignarle un poder
-curl -X POST http://localhost:3000/api/heroes/11/powers/12 \
-  -H "Authorization: Bearer $TOKEN"
-
-# Intentar borrar un héroe de marta (debe dar 403)
-curl -X DELETE http://localhost:3000/api/heroes/4 \
-  -H "Authorization: Bearer $TOKEN"
-```
+1. El navegador hace la petición.
+2. La ruta la envía a su controlador.
+3. El controlador pide los datos al repositorio.
+4. El repositorio consulta la base de datos.
+5. Los datos vuelven al controlador, que renderiza la vista EJS (o devuelve JSON en la API).
 
 ---
 
-## Rutas web
+## Próximas mejoras
 
-| Ruta | Página | Acceso |
-| --- | --- | --- |
-| `/heroes` | Listado de héroes | Público |
-| `/heroes/:id` | Detalle y asignación de poderes | Público (asignar: creador o admin) |
-| `/heroes/new` | Crear héroe | Usuario |
-| `/heroes/:id/edit` | Editar héroe | Creador o admin |
-| `/me/heroes` | Mis héroes | Usuario |
-| `/powers` | Listado de poderes | Público (gestionar: admin) |
-| `/login`, `/register` | Acceso | Público |
-
-Los formularios HTML solo envían GET y POST, así que editar y borrar se hacen con rutas POST (`/heroes/:id/delete`, etc.). En la web el JWT se guarda en una cookie `httpOnly`.
-
----
-
-## Hoja de ruta
-
-- [ ] **Fase 1**: `docker compose up` con la BD cargada, servidor Express y conexión a PostgreSQL con Sequelize.
-- [ ] **Fase 2**: CRUD de poderes en la API (modelo + repositorio + controlador + rutas).
-- [ ] **Fase 3**: vistas EJS de poderes reutilizando el repositorio.
-- [ ] **Fase 4**: héroes y relación N:M con poderes (`include`, asignar y quitar).
-- [ ] **Fase 5**: registro, login, `verifyToken` y cookie en la web.
-- [ ] **Fase 6**: relación 1:N con usuarios, comprobación de propiedad y `requireRole('admin')`.
-- [ ] **Extra**: filtro por poder, validación, errores centralizados y paginación.
-
----
-
-## Errores típicos
-
-- **Las tablas no existen o están vacías**: el volumen ya existía antes de añadir los scripts. Ejecuta `docker compose down -v` y vuelve a arrancar.
-- **`ECONNREFUSED 127.0.0.1:5432` desde la app**: dentro de Docker la BD no está en `localhost`, sino en `db`.
-- **`port is already allocated`**: ya tienes un PostgreSQL local en el 5432 (o algo en el 3000/8080). Páralo o cambia el puerto de la izquierda en `docker-compose.yml` (por ejemplo `"5433:5432"`).
-- **Instalo un paquete y la app no lo encuentra**: instálalo con `docker compose exec app npm install <paquete>` o reconstruye con `docker compose up --build`.
-- **nodemon no recarga al guardar**: comprueba que el script `dev` lleva `--legacy-watch`.
-- **`/heroes/new` devuelve "héroe no encontrado"**: has declarado `/heroes/:id` antes que `/heroes/new`.
-- **Cualquiera puede crear héroes a nombre de otro**: estás leyendo `userId` de `req.body`. Debe salir de `req.user.id`.
-- **La API devuelve la contraseña**: usa `attributes: { exclude: ['password'] }` en el repositorio.
-- **`column "createdAt" does not exist`**: te falta `underscored: true` en la configuración de Sequelize.
-- **`relation "Heroes" does not exist`**: te falta `tableName: 'heroes'` en el modelo.
+- Quitar los `console.log` de depuración, sobre todo los que imprimen la contraseña y el usuario al hacer login.
+- Mostrar un mensaje claro (por ejemplo, "No se puede borrar una categoría que tiene eventos") en lugar de un error 500.
+- Revisar la configuración de sesiones (cookie `httpOnly`, secreto en el `.env`) y arreglar el logout.
+- Pedir la lista de categorías una sola vez por petición.
+- Borrar con un solo `DELETE`, sin el `SELECT` previo.
+- Añadir paginación al listado de eventos.
+- Añadir pruebas automáticas.
+- Trabajar con una rama de Git por funcionalidad.
