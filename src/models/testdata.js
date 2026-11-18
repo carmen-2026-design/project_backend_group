@@ -2,6 +2,7 @@ import User from "./user.model.js";
 import Event from "./event.model.js";
 import Category from "./category.model.js";
 import Registration from "./registration.model.js";
+import Province from "./province.model.js";
 
 // ---------- User 1:N Event (creador del evento) ----------
 User.hasMany(Event, { foreignKey: 'userId', as: 'events' });
@@ -10,6 +11,10 @@ Event.belongsTo(User, { foreignKey: 'userId', as: 'owner' });
 // ---------- Category 1:N Event ----------
 Category.hasMany(Event, { foreignKey: 'categoryId', as: 'events' });
 Event.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
+
+// ---------- Province 1:N Event ----------
+Province.hasMany(Event, { foreignKey: 'provinceId', as: 'events' });
+Event.belongsTo(Province, { foreignKey: 'provinceId', as: 'province' });
 
 // ---------- User 1:N Registration ----------
 User.hasMany(Registration, { foreignKey: 'userId', as: 'registrations' });
@@ -25,5 +30,6 @@ export {
   User, 
   Event, 
   Category, 
-  Registration 
+  Registration,
+  Province
 };

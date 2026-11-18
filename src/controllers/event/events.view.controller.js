@@ -1,5 +1,7 @@
 
 import eventRepository from "../../repositories/event.repository.js";
+import provinceRepository from "../../repositories/province.repository.js";
+import categoryRepository from "../../repositories/category.repository.js";
 
 
 // ------------------ CRUD de event ----------------------------
@@ -21,8 +23,10 @@ const create = async (req,res)=>{
     res.redirect("/event/"+event.eventId);
 }
 
-const createForm = (req,res)=>{
-    res.render("event/create");
+const createForm = async(req,res)=>{
+    const provinces = await provinceRepository.getAll();
+    const categories = await categoryRepository.getAll();
+    res.render("event/create", { provinces, categories });
 }
 
 // ------------------ R (Read)---------------------------------------------
@@ -46,7 +50,7 @@ const update =async (req,res)=>{
     const id = req.params.id;
     const event  = await eventRepository.update(id,req.body);
     if(event){
-        res.redirect("/event/"+event.id);
+        res.redirect("/event/"+event.eventId);
     }else{
         res.redirect("/event");
     }
@@ -56,7 +60,10 @@ const update =async (req,res)=>{
 const updateForm = async (req,res)=>{
     const id = parseInt(req.params.id);
     const event  = await eventRepository.getById(id);
-    res.render("event/update", {event})
+    const provinces =await provinceRepository.getAll();
+    const categories= await categoryRepository.getAll();
+
+    res.render("event/update", {event,provinces,categories});
 }
 
 
