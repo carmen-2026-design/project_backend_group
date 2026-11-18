@@ -384,6 +384,56 @@ p.message {
     }
 }
 
+/* ------------Menú de usuario logeado ---------*/
+/* Posicionamiento relativo en el elemento padre */
+.user-menu {
+    position: relative;
+    cursor: pointer;
+}
+
+.user-info {
+    display: inline-block;
+    padding: 8px 12px;
+}
+
+/* Submenú oculto por defecto */
+.user-menu .dropdown {
+    display: none;
+    position: absolute;
+    right: 0; /* Lo alinea a la derecha para que no se salga de la pantalla */
+    top: 100%;
+    background-color: #ffffff; /* Cambia el color según el tema de tu web */
+    min-width: 180px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    padding: 0;
+    list-style: none;
+    z-index: 1000;
+}
+
+/* Mostrar el submenú al pasar el cursor por encima */
+.user-menu:hover .dropdown {
+    display: block;
+}
+
+/* Estilos de los enlaces dentro del submenú */
+.user-menu .dropdown li {
+    width: 100%;
+    margin: 0;
+}
+
+.user-menu .dropdown li a {
+    display: block;
+    padding: 10px 15px;
+    color: #333333;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.user-menu .dropdown li a:hover {
+    background-color: #f0f0f0;
+}
+
 @media (max-width: 480px) {
     nav h1 {
         font-size: 1.25rem;

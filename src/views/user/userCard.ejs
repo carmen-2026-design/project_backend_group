@@ -2,14 +2,18 @@
     <h3><%= user.userName %></h3>
     <p>Email: <%= user.userEmail %></p>
     <p>Rol: <%= user.userRole %></p>
-    <a href="/user/<%=user.userId%>">Visitar</a>
     
+    <a href="/user/<%=user.userId%>">Visitar</a>
+
     <form method="get" action="/user/<%=user.userId%>/edit">
         <button>Editar</button>
     </form>
-    <form method="post" action="/user/<%=user.userId%>/delete">
-        <button>Eliminar</button>
-    </form>
+
+    <% if (userLogin.userRole === 'admin' && user.userRole !== 'admin') { %>
+        <form method="post" action="/user/<%=user.userId%>/delete">
+            <button>Eliminar</button>
+        </form>
+    <% } %>
 
 </article>
 
