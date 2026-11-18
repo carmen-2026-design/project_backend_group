@@ -20,7 +20,7 @@ router.use("/user",userRouter);
 //router.use("/user",isAuthenticated,userRouter);
 router.use("/event",eventRouter);
 router.use("/category",categoryRouter);
-router.use("/registration",registrationRouter);
+router.use("/registration",isAuthenticated,registrationRouter);
 router.use("/auth", authRouter);
 
 export default router;

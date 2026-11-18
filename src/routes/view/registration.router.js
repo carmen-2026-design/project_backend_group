@@ -3,6 +3,13 @@ import registrationViewController from "../../controllers/registration/registrat
 
 const router = Router();
 
+router.use((req, res, next) => {
+    if (req.session.userLogin || req.session.user) {
+        return next();
+    }
+    res.redirect("/auth/login");
+});
+
 // ------------------ CRUD de registration ----------------------------
 
 // ------------------ C (Create)
@@ -34,7 +41,7 @@ router.post("/:id/edit",registrationViewController.update)
 // ------------------------ D (Delete)------------
 
 
-router.post("/:id/delete",registrationViewController.remove)
+router.post("/:id/cancel",registrationViewController.cancel);
 
 
 export default router;

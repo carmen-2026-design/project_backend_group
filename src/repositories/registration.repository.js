@@ -1,4 +1,5 @@
-import { Registration } from "../models/testdata.js";
+import { Registration, Event } from "../models/testdata.js";
+
 
 
 // ------------------ CRUD de registration ----------------------------
@@ -10,17 +11,37 @@ const create = async (data) => {
     return registration;
 }
 
+// busca la inscripción de un usuario en un evento concreto
+const getByUserAndEvent = async (userId, eventId) => {
+    return await Registration.findOne({ where: { userId, eventId } });
+};
 
 // ------------------ R (Read)---------------------------------------------
 // endpoint lista de datos
-const getAll = async () => {
-    const registration = await Registration.findAll();
-    return registration;
+const getAll = async (userId = null) => {
+    const where = userId ? { userId } : {};
+    const registrations = await Registration.findAll({
+        where,
+        include: {
+            model: Event,
+            as: "event",
+            attributes: ["eventTitle", "eventDescription"]
+
+        }
+    });
+    return registrations;
 };
 
 // endpoint dato individual
 const getById = async (id) => {
-    const registration = await Registration.findByPk(id);
+    const registration = await Registration.findByPk(id, {
+        include: {
+            model: Event,
+            as: "event",
+            attributes: ["eventTitle", "eventDescription"]
+
+        }
+    });
     return registration;
 };
 
@@ -50,17 +71,35 @@ const modify = async (id, data) => {
     if (!registration) {
         return null;
     }
-        registration.userId = userId || registration.userId;
-        registration.eventId = eventId || registration.eventId;
-        registration.registrationPeople = registrationPeople || registration.registrationPeople;
-        registration.registrationStatus = registrationStatus || registration.registrationStatus;
-        registration.registrationCancelDate = registrationCancelDate || registration.registrationCancelDate;
+    registration.userId = userId || registration.userId;
+    registration.eventId = eventId || registration.eventId;
+    registration.registrationPeople = registrationPeople || registration.registrationPeople;
+    registration.registrationStatus = registrationStatus || registration.registrationStatus;
+    registration.registrationCancelDate = registrationCancelDate || registration.registrationCancelDate;
     await registration.save();
     return registration;
 }
 
+const cancel = async (id) => {
+    const registration = await Registration.findByPk(id);
+    if (!registration) {
+        return null;
+    }
+    registration.registrationStatus = "cancelled";
+    registration.registrationCancelDate = new Date();
+    await registration.save();
+    return registration;
+};
 
-
+const updatePeople = async (id, registrationPeople) => {
+    const registration = await Registration.findByPk(id);
+    if (!registration) {
+        return null;
+    }
+    registration.registrationPeople = registrationPeople;
+    await registration.save();
+    return registration;
+};
 
 // ------------------------ D (Delete)------------
 
@@ -80,5 +119,8 @@ export default {
     getById,
     update,
     modify,
-    remove
+    remove,
+    cancel,
+    updatePeople,
+    getByUserAndEvent
 }
