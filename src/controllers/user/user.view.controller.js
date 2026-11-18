@@ -95,23 +95,42 @@ const update = async(req,res)=>{
 
 // ------------------------ D (Delete)------------
 
-const remove = async(req,res)=>{
-    try{
-        const id  = parseInt(req.params.id);
-        const user = await userRepository.getById(id);
-        console.log("ID intentando eliminar:", id);
-        if (user.userRole == 'user')
-        {
-            user = await userRepository.remove(id);
-            res.redirect("/user");
-        }
-    }catch (error) {
+const remove = async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        await userRepository.remove(id);
+        res.redirect("/user");
+
+    } catch (error) {
         console.error(error);
-        //res.status(error.status || 500).redirect("/user");
-        res.status(error.status || 500).redirect("/");
+        try {
+            // Volvemos a obtener todos los usuarios para poder renderizar la lista completa
+            const users = await userRepository.getAll();
+            // Renderizamos la vista de lista pasando los usuarios y el error
+            res.status(error.status || 500).render("user/list", {users, error: error.message});
+        } catch (innerError) {
+            // Por si falla la recuperación de la lista
+            console.error(innerError);
+            res.status(500).render("user/list", {users: [], error: "No se pudo eliminar el usuario y ocurrió un error al cargar la lista." });
+        }
     }
-    
 }
+
+// const remove = async(req,res)=>{
+//     const id  = parseInt(req.params.id);
+//     const { userName, userEmail, userPassword, userPasswordRepeat, userRole } = req.body;
+//     const formData = { userId: id, userName, userEmail, userRole };
+
+//     try{
+//         await userRepository.remove(id);
+//         res.redirect("/user");
+//     }catch (error) {
+//         console.error(error);
+//         //res.status(error.status || 500).redirect("/user");
+//         res.status(error.status || 500).render("user/list", { roles: ROLES, user: formData, error: error.message });
+//     }
+    
+// }
 
 
 export default {

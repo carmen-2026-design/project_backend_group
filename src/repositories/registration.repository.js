@@ -11,6 +11,10 @@ const create = async (data) => {
     return registration;
 }
 
+// busca la inscripción de un usuario en un evento concreto
+const getByUserAndEvent = async (userId, eventId) => {
+    return await Registration.findOne({ where: { userId, eventId } });
+};
 
 // ------------------ R (Read)---------------------------------------------
 // endpoint lista de datos
@@ -20,7 +24,7 @@ const getAll = async (userId = null) => {
         where,
         include: {
             model: Event,
-            as: "Event",
+            as: "event",
             attributes: ["eventTitle", "eventDescription"]
 
         }
@@ -33,7 +37,7 @@ const getById = async (id) => {
     const registration = await Registration.findByPk(id, {
         include: {
             model: Event,
-            as: "Event",
+            as: "event",
             attributes: ["eventTitle", "eventDescription"]
 
         }
@@ -117,5 +121,6 @@ export default {
     modify,
     remove,
     cancel,
-    updatePeople
+    updatePeople,
+    getByUserAndEvent
 }
