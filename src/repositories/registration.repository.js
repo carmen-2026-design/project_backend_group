@@ -11,6 +11,10 @@ const create = async (data) => {
     return registration;
 }
 
+// busca la inscripción de un usuario en un evento concreto
+const getByUserAndEvent = async (userId, eventId) => {
+    return await Registration.findOne({ where: { userId, eventId } });
+};
 
 // ------------------ R (Read)---------------------------------------------
 // endpoint lista de datos
@@ -117,5 +121,6 @@ export default {
     modify,
     remove,
     cancel,
-    updatePeople
+    updatePeople,
+    getByUserAndEvent
 }
