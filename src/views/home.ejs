@@ -1,10 +1,27 @@
 <%- include('layout/header', { title: 'Home' }); -%>
 
+<h2>Inicio</h2>
+<%- include('layout/error') -%>
+
+<% if(query ){
+    if(query.error){
+        %>
+        <p class="error"><%= query.error %></p>
+        <%
+    }
+    if(query.message){
+        %>
+        <p class="message"><%= query.message %></p>
+        <%
+    }
+}
+%>
 
 <main class="home-main">
-    <article class="hero-card">
-        <h1 class="hero-title">JoinUp</h1>
-        <p class="hero-subtitle">Eventos para todos los gustos...</p>
+    <article class="home-card">
+        <h1 class="home-title">JoinUp</h1>
+        <p class="home-subtitle">Eventos para todos los gustos...</p>
     </article>
 </main>
-    <%- include('layout/footer'); -%>
+
+<%- include('layout/footer'); -%>

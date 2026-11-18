@@ -26,7 +26,7 @@ app.use(session({
 
 app.use((req,res,next)=>{
     res.locals.query = req.query;
-    res.locals.user = req.session?.user;
+    res.locals.userLogin = req.session?.userLogin;
     next();
 })
 
