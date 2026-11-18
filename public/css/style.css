@@ -280,7 +280,7 @@ article h3 {
 }
 
 /* Tarjeta central (Article) acorde a la paleta de tu navbar */
-.hero-card {
+.home-card {
     background-color: #161e2e; /* Mismo tono azul marino oscuro de tu header */
     color: #ffffff;
     padding: 3.5rem 4.5rem;
@@ -293,13 +293,13 @@ article h3 {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.hero-card:hover {
+.home-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 14px 30px rgba(22, 30, 46, 0.35);
 }
 
 /* Título principal */
-.hero-title {
+.home-title {
     font-size: 3rem;
     font-weight: 700;
     margin: 0 0 1rem 0;

@@ -142,14 +142,21 @@ const remove = async (id) => {
         throw new NotFoundError("El usuario no existe");
         //return null;
     } catch (error){
-        console.error(error);
-        throwError(error);
+        if (error.name === 'SequelizeDatabaseError'){
+            throw new NotFoundError("No se puede eliminar el usuario porque tiene eventos o inscripciones asociadas");
+        }
+        else{
+            console.error(error);
+            throwError(error);
+        }
         // if (error.name === 'SequelizeDatabaseError'){
         //     console.error("No se puede eliminar el usuario porque tiene eventos o registros asociados");
         //     redirect(res, "/", {error:"No se puede eliminar el usuario porque tiene eventos o registros asociados"})
         // }
-        // else
-        //     throw error;
+        // else{
+        //     console.error(error);
+        //     throwError(error);
+        // }
     }
 }
 

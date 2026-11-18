@@ -17,15 +17,26 @@
             <li><a href="/">Inicio</a></li>
             <li><a href="/event">Eventos</a></li>
             <li><a href="/category">Categorias</a></li>
-            <li><a href="/registration">Registros</a></li>
-            <% if(!user){
+            <li><a href="/registration">Inscripciones</a></li>
+            <% if(!userLogin){
                 %>
-            <li><a href="/auth/login">Login</a></li>
+                <li><a href="/auth/login">Login</a></li>
             <%
             }else{
                 %>
-            <li><a href="/auth/logout">Logout</a></li>
-            <li><a href="/user">Usuarios</a></li>
+                <li><a href="/auth/logout">Logout</a></li>
+
+                <!-- Mostrar todos los usuarios si es 'admin' y sólo el usuario si es 'user' -->
+                <% if(userLogin.userRole === 'admin'){ %>
+                    <li><a href="/user">Usuarios</a></li>
+                <% } else { %>
+                    <li><a href="/user/<%= userLogin.userId %>">Usuario</a></li>
+                <% } %>
+                
+                <!-- Mostrar el icono y los datos del usuario logeado -->
+                <li class="user-info">
+                    👤 <%= userLogin.userName %> ( <%= userLogin.userRole %> )
+                </li>
             <%}%>
         </ul>
     </nav>
