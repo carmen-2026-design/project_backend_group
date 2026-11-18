@@ -1,6 +1,7 @@
 import { Router } from "express";
 import categoryViewController from "../../controllers/category/category.view.controller.js";
-
+import { isAuthenticated } from "../../middlewares/auth.middleware.js";
+import { isAdmin } from "../../middlewares/auth.middleware.js";
 const router = Router();
 
 // ------------------ CRUD de category ----------------------------
@@ -9,10 +10,10 @@ const router = Router();
 // endpoint para crear dato
 
 // vista de formulario
-router.get("/new",categoryViewController.createForm);
+router.get("/new",isAuthenticated, isAdmin, categoryViewController.createForm);
 
 // creación de dato
-router.post("/",categoryViewController.create);
+router.post("/",isAuthenticated, isAdmin, categoryViewController.create);
 
 // ------------------ R (Read)---------------------------------------------
 // endpoint lista de datos
@@ -24,10 +25,10 @@ router.get("/:id", categoryViewController.getById)
 // ---------------- U (Update) -----------------------------------
 
 // vista de actualización de usuario
-router.get("/:id/edit",categoryViewController.updateForm);
+router.get("/:id/edit", isAuthenticated, isAdmin, categoryViewController.updateForm);
 
 // endpoint para cambiar dato por completo
-router.post("/:id/edit",categoryViewController.update)
+router.post("/:id/edit", isAuthenticated, isAdmin, categoryViewController.update)
 
 
 

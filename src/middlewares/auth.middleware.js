@@ -1,5 +1,5 @@
 const isAuthenticated = async(req,res,next) =>{
-    if(req.session.user){
+    if(req.session.userLogin){
         return next();
     }
 
@@ -7,7 +7,15 @@ const isAuthenticated = async(req,res,next) =>{
     
 }
 
+const isAdmin = async(req, res, next)=> {
+    if(req.session.userLogin.userRole === "admin"){
+        return next();
+    }
+        res.redirect("/auth/login");
+
+}
 
 export {
-    isAuthenticated
+    isAuthenticated,
+    isAdmin
 }

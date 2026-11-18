@@ -5,7 +5,9 @@
     <a href="/category/<%=category.categoryId%>" title="Ir a ver las categorias" >Visitar</a>
     
 
-    
+    <% if(userLogin && userLogin.userRole === "admin"){
+
+    %>
     <form method="get" action="/category/<%=category.categoryId%>/edit">
         <button>Editar</button>
     </form>
@@ -14,8 +16,9 @@
     <form method="post" action="/category/<%=category.categoryId%>/delete">
         <button>Eliminar</button>
     </form>
-
-    
+<%
+    }
+  %>  
 </article>
 
 
