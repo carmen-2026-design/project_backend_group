@@ -1,20 +1,39 @@
+<%
+    // Formatea la fecha como dd/mm/aaaa
+    const d = event.eventDate ? new Date(event.eventDate) : null;
+    const fecha = (!d || isNaN(d)) ? (event.eventDate || "") :
+        String(d.getUTCDate()).padStart(2, '0') + '/' +
+        String(d.getUTCMonth() + 1).padStart(2, '0') + '/' +
+        d.getUTCFullYear();
+%>
 <article class="event-card">
     <h3><%= event.eventTitle %></h3>
     <p>Descripcion: <%= event.eventDescription %></p>
-    <p>Fecha: <%= event.eventDate %></p>
+    <p>Fecha: <%= fecha %></p>
     <p>Direccion: <%= event.eventAddress %></p>
     <p>Código Postal: <%= event.eventPostalCode %></p>
-    <p>Provincia: <%= event.provinceId %></p>
-    <p>Creador: <%= event.userId %></p>
-    <p>Categoria: <%= event.categoryId %></p>
+    <p>Provincia: <%= event.province ? event.province.provinceName : event.provinceId %></p>
+    <p>Categoria: <%= event.category ? event.category.categoryName : event.categoryId %></p>
 
 
     <a href="/event/<%=event.eventId%>">Visitar</a>
-    <form method="get" action="/event/<%=event.eventId%>/edit">
-        <button>Editar</button>
-    </form>
-    <form method="post" action="/event/<%=event.eventId%>/delete">
-        <button>Eliminar</button>
-    </form>
+    <% if (locals.userLogin && userLogin.userRole === 'admin') { %>
+
+        <form method="get" action="/event/<%=event.eventId%>/edit">
+            <button>Editar</button>
+        </form>
+
+        <form method="post" action="/event/<%=event.eventId%>/delete">
+            <button>Eliminar</button>
+        </form>
+
+    <% } else if (locals.userLogin && userLogin.userRole === 'user') { %>
+        <%# Inscribirse: hace la petición en segundo plano y no cambia la pantalla %>
+
+        <form method="post" action="/event/<%=event.eventId%>/register"
+              onsubmit="fetch(this.action,{method:'POST'}); return false;">
+            <button>Inscribirse</button>
+        </form>
+    <% } %>
 
 </article>

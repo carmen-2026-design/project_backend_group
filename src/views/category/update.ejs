@@ -1,6 +1,7 @@
 <%- include('../layout/header', { title: 'Categoria' }); -%>
 
 <h2>Editar categoria</h2>
+
 <%- include('../layout/error') -%>
 
 <% if(query ){
@@ -25,11 +26,14 @@
 
 
     <label for="categoryDescription">Descripción</label>
-    <input type="text" id="categoryDescription" name="categoryDescription">
+    <input type="text" id="categoryDescription" name="categoryDescription" value="<%= category.categoryDescription%>">
 
     
 
 
-    <button>editar</button>
+    <button>Actualizar</button>
 </form>
+
+    <a href="/category">Volver</a>
+
 <%- include('../layout/footer'); -%>

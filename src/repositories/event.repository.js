@@ -1,5 +1,11 @@
-import { Event } from "../models/testdata.js";
+import { Event, Province, Category } from "../models/testdata.js";
 
+
+// relaciones que se cargan junto al evento (para mostrar nombres en vez de ids)
+const eventIncludes = [
+    { model: Province, as: "province" },
+    { model: Category, as: "category" }
+];
 
 // ------------------ CRUD de event ----------------------------
 
@@ -14,13 +20,13 @@ const create = async (data) => {
 // ------------------ R (Read)---------------------------------------------
 // endpoint lista de datos
 const getAll = async () => {
-    const events = await Event.findAll();
+    const events = await Event.findAll({ include: eventIncludes });
     return events;
 };
 
 // endpoint dato individual
 const getById = async (id) => {
-    const event = await Event.findByPk(id);
+    const event = await Event.findByPk(id, { include: eventIncludes });
  
     return event;
 };
