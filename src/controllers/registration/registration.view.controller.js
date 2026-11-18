@@ -15,20 +15,29 @@ const canAccess = (sessionUser, registration) => {
 // ------------------ C (Create)
 // endpoint para crear dato
 const create = async (req, res) => {
-    const {
-        userId,
-        eventId,
-        registrationPeople,
-        registrationStatus,
-        registrationCancelDate
-    } = req.body;
+    const { userId } = getSessionUser(req);
+    const { eventId, registrationPeople } = req.body;
+
+    const existing = await registrationRepository.getByUserAndEvent(userId, eventId);
+
+    // ya inscrito: no se crea otra
+    if (existing && existing.registrationStatus === "registered") {
+        return res.redirect("/registration/" + existing.registrationId);
+    }
+
+    // estaba cancelada: se reactiva
+    if (existing) {
+        existing.registrationStatus = "registered";
+        existing.registrationCancelDate = null;
+        existing.registrationPeople = registrationPeople;
+        await existing.save();
+        return res.redirect("/registration/" + existing.registrationId);
+    }
 
     const registration = await registrationRepository.create({
         userId,
         eventId,
-        registrationPeople,
-        registrationStatus,
-        registrationCancelDate
+        registrationPeople
     });
 
     res.redirect("/registration/" + registration.registrationId);
