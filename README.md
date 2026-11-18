@@ -1,11 +1,8 @@
 # JoinUp — Gestor de eventos y planes
 
-JoinUp es una aplicación web para crear eventos y apuntarse a ellos. Cada usuario se registra, ve los eventos que hay, los filtra por categoría y provincia y se inscribe diciendo cuántas personas van. Además hay un usuario administrador que gestiona categorías, usuarios y eventos.
+JoinUp es una aplicación web para apuntarse a eventos. Cada usuario se registra, ve los eventos que hay, y se inscribe diciendo cuántas personas van. Además hay un usuario administrador que gestiona categorías, usuarios y eventos.
 
-La aplicación tiene dos interfaces que comparten la misma lógica:
-
-- una **web** con vistas EJS, para usarla desde el navegador;
-- una **API REST** en JSON, bajo `/api`.
+La aplicación tiene una **web** con vistas EJS, para usarla desde el navegador.
 
 **Equipo:** Adrián, Carmen, Eder y Pipe.
 
@@ -24,17 +21,15 @@ La aplicación tiene dos interfaces que comparten la misma lógica:
 ## Funcionalidades
 
 - **Registro e inicio de sesión.** Se comprueba que el correo y el nombre de usuario no existan ya. La contraseña se cifra con bcrypt (10 rondas de sal) y el usuario se guarda con rol `user`. Al iniciar sesión se compara la contraseña con el hash usando `bcrypt.compare`.
-- **Eventos.** Se pueden crear, ver, editar y borrar, cada uno con su categoría y su provincia. El listado trae cada evento con su provincia y su categoría en una sola consulta (`include` de Sequelize).
+- **Eventos.** Se pueden ver, editar y borrar. El listado trae cada evento con su provincia y su categoría en una sola consulta (`include` de Sequelize).
 - **Inscripciones.** Un usuario se apunta a un evento indicando cuántas personas van (de 1 a 10) y ve sus inscripciones junto con el título y la descripción del evento.
-- **Categorías.** Se pueden listar y consultar. Solo el administrador puede crearlas, editarlas y borrarlas.
+- **Categorías.** Se pueden listar y consultar. Solo el administrador puede editarlas y borrarlas.
 - **Gestión de usuarios.** El administrador ve la lista de usuarios y puede eliminar los que no tengan eventos creados.
 - **Roles.** Hay dos: `user` y `admin`.
 
 ---
 
-## Tecnologías y APIs utilizadas
-
-### Tecnologías
+## Tecnologías
 
 | Tecnología | Para qué la usamos |
 | --- | --- |
@@ -52,27 +47,6 @@ La aplicación tiene dos interfaces que comparten la misma lógica:
 | pgAdmin 4 | Consultar y administrar la base de datos desde el navegador |
 | JSDoc | Generar la documentación del código |
 | Git y GitHub | Trabajar en equipo y repartir el código |
-
-### APIs
-
-La aplicación no consume APIs externas: todos los datos salen de su propia base de datos PostgreSQL.
-
-Sí expone su propia **API REST**, que devuelve JSON bajo `/api`. Se puede probar con curl, Postman o Thunder Client.
-
-| Método | Ruta | Descripción |
-| --- | --- | --- |
-| GET | `/api/user` · `/api/event` | Listado |
-| GET | `/api/user/:id` · `/api/event/:id` | Detalle |
-| POST | `/api/user` · `/api/event` | Crear |
-| PUT | `/api/user/:id` · `/api/event/:id` | Reemplazar el recurso completo |
-| PATCH | `/api/user/:id` · `/api/event/:id` | Modificar solo los campos enviados |
-| DELETE | `/api/user/:id` · `/api/event/:id` | Borrar |
-
-Ejemplo:
-
-```bash
-curl http://localhost:3000/api/event
-```
 
 ---
 
@@ -98,22 +72,22 @@ Crea un archivo `.env` en la raíz con estas variables (los valores son de ejemp
 
 ```env
 # Aplicación
-APP_HOST=joinup_app
-APP_PORT=3000
-SESSION_SECRET=cambia-este-secreto
+APP_HOST=
+APP_PORT=
+SESSION_SECRET=
 
 # PostgreSQL
-POSTGRES_HOST=joinup_db
-POSTGRES_PORT=5432
-POSTGRES_USER=joinup
-POSTGRES_PASSWORD=joinup
-POSTGRES_DB=joinup
+POSTGRES_HOST=
+POSTGRES_PORT=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
 
 # pgAdmin
-PGADMIN_HOST=joinup_pgadmin
-PGADMIN_EMAIL=admin@joinup.com
-PGADMIN_PASSWORD=admin
-PGADMIN_PORT=8080
+PGADMIN_HOST=
+PGADMIN_EMAIL=
+PGADMIN_PASSWORD=
+PGADMIN_PORT=
 ```
 
 > El `.env` no se sube a Git.
@@ -183,7 +157,7 @@ Los datos de prueba incluyen:
 
 - 8 usuarios
 - las 52 provincias
-- 5 categorías: Sports, Music, Technology, Culture y Food
+- 5 categorías: Deportes, Música, Tecnología, Cultura y Gastronomía
 - 10 eventos, dos de ellos ya pasados
 - 18 inscripciones, tres de ellas canceladas
 
@@ -193,14 +167,14 @@ Los datos de prueba incluyen:
 2. **Explora los eventos** en `/event`. Cada evento muestra su fecha, dirección, provincia y categoría.
 3. **Apúntate a un evento** desde `/registration/new`. Indica cuántas personas vais, entre 1 y 10.
 4. **Revisa tus inscripciones** en `/registration`. Desde ahí puedes editarlas o cancelarlas.
-5. **Publica tu propio plan** en `/event/new`. Tendrás que indicar título, fecha, dirección, código postal de 5 dígitos, provincia y categoría.
+5. **Edita tu plan** en `/event/edit`. Tendrás que indicar título, fecha, dirección, código postal de 5 dígitos, provincia y categoría.
 6. **Cierra sesión** en `/auth/logout`.
 
 ### Como administrador
 
 Entra con `admin@joinup.com` / `admin`. Además de todo lo anterior, puedes:
 
-1. **Gestionar categorías** en `/category`: crearlas (`/category/new`), editarlas y borrarlas. Una categoría con eventos no se puede borrar.
+1. **Gestionar categorías** en `/category`: editarlas y borrarlas. Una categoría con eventos no se puede borrar.
 2. **Gestionar usuarios** en `/user`: verlos y eliminar los que no tengan eventos creados.
 3. **Gestionar cualquier evento** en `/event`: editarlo o borrarlo.
 
@@ -209,9 +183,9 @@ Entra con `admin@joinup.com` / `admin`. Además de todo lo anterior, puedes:
 | Ruta | Qué hace |
 | --- | --- |
 | `/auth/register` · `/auth/login` · `/auth/logout` | Registro, inicio y cierre de sesión |
-| `/event` | Listado, detalle (`/:id`), crear (`/new`), editar (`/:id/edit`) y borrar (`/:id/delete`) eventos |
-| `/registration` | Listado, detalle, crear, editar y borrar inscripciones |
-| `/category` | Listado y detalle. Crear, editar y borrar: solo admin |
+| `/event` | Listado, detalle (`/:id`), editar (`/:id/edit`) y borrar (`/:id/delete`) eventos |
+| `/registration` | Listado, detalle, editar y borrar inscripciones |
+| `/category` | Listado y detalle. Editar y borrar: solo admin |
 | `/user` | Listado, detalle, crear, editar y borrar usuarios |
 
 Los formularios HTML solo envían GET y POST, así que editar y borrar se hacen con rutas POST (`/:id/edit`, `/:id/delete`).
@@ -324,8 +298,8 @@ project_backend_group/
 │   │                          #   *.api.controller.js  → res.json()
 │   ├── routes/
 │   │   ├── router.js
-│   │   ├── view/              # rutas web (EJS)
-│   │   └── api/               # rutas /api (JSON)
+│   │   └── view/              # rutas web (EJS)
+│   │   
 │   ├── middlewares/
 │   │   └── auth.middleware.js # isAuthenticated, isAdmin
 │   ├── utils/errors.js        # traduce errores de Sequelize a mensaje + código HTTP
@@ -342,7 +316,7 @@ Cada petición sigue este recorrido:
 2. La ruta la envía a su controlador.
 3. El controlador pide los datos al repositorio.
 4. El repositorio consulta la base de datos.
-5. Los datos vuelven al controlador, que renderiza la vista EJS (o devuelve JSON en la API).
+5. Los datos vuelven al controlador, que renderiza la vista EJS.
 
 ---
 
@@ -350,9 +324,10 @@ Cada petición sigue este recorrido:
 
 - Quitar los `console.log` de depuración, sobre todo los que imprimen la contraseña y el usuario al hacer login.
 - Mostrar un mensaje claro (por ejemplo, "No se puede borrar una categoría que tiene eventos") en lugar de un error 500.
-- Revisar la configuración de sesiones (cookie `httpOnly`, secreto en el `.env`) y arreglar el logout.
 - Pedir la lista de categorías una sola vez por petición.
-- Borrar con un solo `DELETE`, sin el `SELECT` previo.
+- Posibilidad de añadir eventos y categorías.
+- Añadir información adicional en la visualización de eventos y categorías.
 - Añadir paginación al listado de eventos.
+- Añadir la gestión de usuarios admin.
 - Añadir pruebas automáticas.
 - Trabajar con una rama de Git por funcionalidad.
