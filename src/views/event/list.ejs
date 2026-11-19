@@ -1,0 +1,7 @@
+<%- include('../layout/header'); -%>
+
+<h2> Eventos:</h2>
+<% for (event of events) {%>
+    <%- include('eventCard',{event}) -%>
+<% } %>
+<%- include('../layout/footer'); -%>

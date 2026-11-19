@@ -1,0 +1,25 @@
+<article class="registration-card">
+
+    <h3>Inscripción #<%= registration.registrationId %></h3>
+
+    <p>Usuario: <%= registration.userId %></p>
+
+    <p>Evento: <%= registration.event?.eventTitle %></p>
+
+    <p>Descripción: <%= registration.event?.eventDescription || "Sin descripción" %></p>
+
+    <p>Número de personas: <%= registration.registrationPeople %></p>
+
+    <p>Estado: <%= registration.registrationStatus %></p>
+
+    <a href="/registration/<%= registration.registrationId %>">Visitar</a>
+    <form method="get" action="/registration/<%= registration.registrationId %>/edit">
+        <button>Editar</button>
+    </form>
+<% if (registration.registrationStatus === "registered") { %>
+    <form method="post" action="/registration/<%= registration.registrationId %>/cancel">
+        <button>Cancelar</button>
+    </form>
+<% } %>
+
+</article>

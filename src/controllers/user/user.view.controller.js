@@ -1,82 +1,136 @@
-import { users } from "../../models/testdata.js";
+import userRepository from "../../repositories/user.repository.js";
 
+const ROLES = ["user", "admin"];
 
 // ------------------ CRUD de user ----------------------------
 
 // ------------------ C (Create)
-// endpoint para crear dato
-const create = (req,res)=>{
-    const id =users[users.length-1].id + 1
-    const {username,email,password,role} = req.body;
-    const user = {
-        id,
-        username,
-        email,
-        password,
-        role
-    }
-    users.push(user)
-    // Esto de abajo es lo mismo porque el nombre de la variable y la clave son iguales, vale?
-    //  users.push({
-    //     id:id,
-    //     username:username,
-    //     email:email,
-    //     password:password,
-    //     role:role
-    // })
-    res.redirect("/user/"+id);
-}
-
 const createForm = (req,res)=>{
     const roles = ["user","admin"]
     res.render("user/create",{roles});
 }
 
+// endpoint para crear dato
+const create = async (req,res)=>{
+    const {userName,userEmail,userPassword,userPasswordRepeat, userRole} = req.body;
+    
+    // los datos que había escrito, para volver a rellenar el formulario si hay error
+    // (las contraseñas no se devuelven nunca)
+    const formData = { userName, userEmail, userRole };
+
+    if (!password) {
+        return res.render("user/create", { roles: ROLES, user: formData, error: "La contraseña es obligatoria" });
+    }
+    if (password !== passwordRepeat) {
+        return res.render("user/create", { roles: ROLES, user: formData, error: "Las contraseñas no coinciden" });
+    }
+
+    try{
+        const user = await userRepository.create({userName, userEmail, userPassword, userRole})
+        res.redirect("/user/"+user.userId);
+    } catch (error) {
+        console.error(error);
+        res.status(error.status || 500).render("user/create", { roles: ROLES, user: formData, error: error.message });
+    }
+}
+
 // ------------------ R (Read)---------------------------------------------
 // endpoint lista de datos
-const getAll = (req, res) => {
-    res.render("user/list",{users})
+const getAll = async(req, res) => {
+    try{
+        const users = await userRepository.getAll();
+        res.render("user/list",{users})
+    } catch (error) {
+        console.error(error);
+        res.status(error.status || 500).render("user/list", { users: [] });
+    }
 };
 
 // endpoint dato individual
-const getById =(req, res) => {
-    const id = parseInt(req.params.id);
-    const user = users.find(u=>u.id===id)
-    res.render("user/show",{user})
+const getById = async (req, res) => {
+    try{
+        const id = parseInt(req.params.id);
+        const user = await userRepository.getById(id);
+        res.render("user/show",{user})
+    } catch (error) {
+        console.error(error);
+        res.status(error.status || 500).render("user/show", { user: null });
+    }
 };
 
 
 // ---------------- U (Update) -----------------------------------
+const updateForm = async (req, res) => {
+    try{
+        const id = parseInt(req.params.id);
+        const user = await userRepository.getById(id);
+        res.render("user/update", { roles: ROLES, user, error: null });
+    }catch (error) {
+        console.error(error);
+        res.status(error.status || 500).render("user/edit", { roles: ROLES, user: null, error: error.message });
+    }
+}
+
 // endpoint para cambiar dato por completo
-const update =(req,res)=>{
-    const {username,email,password,role} = req.body;
-    const id = req.params.id;
-    const user  = users.find(u=>u.id===id)
-    user.username = username;
-    user.email = email;
-    user.password = password;
-    user.role = role;
-    res.redirect("/user/"+user.id);
-}
+const update = async(req,res)=>{
+    const id = parseInt(req.params.id);
+    const { userName, userEmail, userPassword, userPasswordRepeat, userRole } = req.body;
+    const formData = { userId: id, userName, userEmail, userRole };
 
-const updateForm = (req,res)=>{
-    const id = req.params.id;
-    const user  = users.find(u=>u.id===id)
-    res.render("user/update", {user})
+    if (userPassword !== userPasswordRepeat) {
+        return res.render("user/edit", { roles: ROLES, user: formData, error: "Las contraseñas no coinciden" });
+    }
+    try {
+        const user  = await userRepository.modify(id, { userName, userEmail, userPassword, userRole });
+        if(user){
+            res.redirect("/user/"+ user.userId);
+        }else{
+            res.redirect("/user");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(error.status || 500).render("user/edit", { roles: ROLES, user: formData, error: error.message });
+    }
 }
-
 
 // ------------------------ D (Delete)------------
 
-const remove =(req,res)=>{
-    const id  = parseInt(req.params.id);
-    const index = users.findIndex(u=>u.id === id);
-    let user;
-    if(index > -1){
-        user =users.splice(index,1);
+const remove = async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        await userRepository.remove(id);
+        res.redirect("/user");
+
+    } catch (error) {
+        console.error(error);
+        try {
+            // Volvemos a obtener todos los usuarios para poder renderizar la lista completa
+            const users = await userRepository.getAll();
+            // Renderizamos la vista de lista pasando los usuarios y el error
+            res.status(error.status || 500).render("user/list", {users, error: error.message});
+        } catch (innerError) {
+            // Por si falla la recuperación de la lista
+            console.error(innerError);
+            res.status(500).render("user/list", {users: [], error: "No se pudo eliminar el usuario y ocurrió un error al cargar la lista." });
+        }
     }
-    res.redirect("/user");
 }
+
+// const remove = async(req,res)=>{
+//     const id  = parseInt(req.params.id);
+//     const { userName, userEmail, userPassword, userPasswordRepeat, userRole } = req.body;
+//     const formData = { userId: id, userName, userEmail, userRole };
+
+//     try{
+//         await userRepository.remove(id);
+//         res.redirect("/user");
+//     }catch (error) {
+//         console.error(error);
+//         //res.status(error.status || 500).redirect("/user");
+//         res.status(error.status || 500).render("user/list", { roles: ROLES, user: formData, error: error.message });
+//     }
+    
+// }
 
 
 export default {

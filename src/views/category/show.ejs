@@ -1,0 +1,22 @@
+<%- include('../layout/header', { title: 'Categoria' }); -%>
+
+<h2>Datos de la categoria</h2>
+<%- include('../layout/error') -%>
+
+<% if(query ){
+    if(query.error){
+        %>
+        <p class="error"><%= query.error %></p>
+        <%
+    }
+    if(query.message){
+        %>
+        <p class="message"><%= query.message %></p>
+        <%
+    }
+}
+%>
+ <%- include('categoryCard',{category}) -%>
+
+    <a href="/category">Volver</a>
+<%- include('../layout/footer'); -%>

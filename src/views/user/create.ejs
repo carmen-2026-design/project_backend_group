@@ -1,22 +1,42 @@
-<%- include('../layout/header'); -%>
+<%- include('../layout/header', { title: 'Usuario' }); -%>
 
-<h2> Nuevo usuario:</h2>
+<h2>Nuevo usuario</h2>
+<%- include('../layout/error') -%>
+
+<% if(query ){
+    if(query.error){
+        %>
+        <p class="error"><%= query.error %></p>
+        <%
+    }
+    if(query.message){
+        %>
+        <p class="message"><%= query.message %></p>
+        <%
+    }
+}
+%>
+
 <form action="/user" method="post">
-    <label for="username">Nombre de usuario</label>
-    <input type="text" name="username" id="username">
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email">
-    <label for="role">Rol</label>
-    <select name="role" id="role">
+    <label for="userName">Nombre de usuario</label>
+    <input type="text" name="userName" id="userName">
+
+    <label for="userEmail">Email</label>
+    <input type="email" id="userEmail" name="userEmail">
+
+    <label for="userRole">Rol</label>
+    <select name="userRole" id="role">
         <% for(role of roles) { %>
             <option value="<%=role%>" ><%=role %> </option>
        <% } %>
     </select>
-    <label for="password">Contraseña</label>
-    <input type="password" name="password" id="password">
-    <label for="passwordRepeat">Repetir Contraseña</label>
-    <input type="password" name="passwordRepeat" id="passwordRepeat">
 
+    <label for="userPassword">Contraseña</label>
+    <input type="password" name="userPassword" id="password">
+  
     <button>Crear</button>
+    
+    <a href="/user">Volver</a>
 </form>
+
 <%- include('../layout/footer'); -%>

@@ -1,8 +1,7 @@
 import { Router } from "express";
 
 import userRouter from "./user.router.js";
-// import heroRouter from "./hero.router.js";
-// import powerRouter from "./power.router.js";
+import eventRouter from "./event.router.js"
 
 
 const router = Router();
@@ -12,7 +11,7 @@ router.get("/", (req, res) => {
 })
 
 router.use("/user",userRouter);
-// router.use("/hero",heroRouter);
-// router.use("/power",powerRouter);
+router.use("/event",eventRouter);
+
 
 export default router;

@@ -7,7 +7,6 @@ const router = Router();
 
 // ------------------ C (Create)
 // endpoint para crear dato
-
 // vista de formulario
 router.get("/new",userViewController.createForm);
 
@@ -22,18 +21,13 @@ router.get("/",userViewController.getAll);
 router.get("/:id", userViewController.getById)
 
 // ---------------- U (Update) -----------------------------------
-
 // vista de actualización de usuario
 router.get("/:id/edit",userViewController.updateForm);
 
 // endpoint para cambiar dato por completo
 router.post("/:id/edit",userViewController.update)
 
-
-
 // ------------------------ D (Delete)------------
-
-
 router.post("/:id/delete",userViewController.remove)
 
 

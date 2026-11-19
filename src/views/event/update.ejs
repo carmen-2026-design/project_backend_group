@@ -1,0 +1,43 @@
+<%- include('../layout/header'); -%>
+
+<h2> Editar evento:</h2>
+<form action="/event/<%= event.eventId %>/edit" method="post">
+
+    <label for="eventTitle">Nombre del Evento</label>
+    <input type="text" name="eventTitle" id="eventTitle" value="<%= event.eventTitle %>">
+    <label for="eventDescription">Descripción</label>
+    <input type="text" id="eventDescription" name="eventDescription" value="<%= event.eventDescription %>">
+    <label for="eventDate">Fecha</label>
+    <input type="date" name="eventDate" id="eventDate" value="<%= event.eventDate %>">
+    <label for="eventAddress">Dirección</label>
+    <input type="text" name="eventAddress" id="eventAddress" value="<%= event.eventAddress %>">
+    <label for="eventPostalCode">Código Postal</label>
+    <input type="text" name="eventPostalCode" id="eventPostalCode" value="<%= event.eventPostalCode %>">
+
+    <label for="provinceId">Provincia</label>
+    <select name="provinceId" id="provinceId">
+        <% for(province of provinces) { %>
+            <option value="<%= province.provinceId %>" <%= province.provinceId === event.provinceId ? "selected" : "" %>><%= province.provinceName %></option>       <% } %>
+    </select>
+
+
+    <label for="userId">Creador</label>
+    <input type="text" name="userId" id="userId" value="<%= event.userId %>">
+    
+
+
+
+    <label for="categoryId">Categoria</label>
+    <select name="categoryId" id="categoryId">
+        <% for(category of categories) { %>
+            <option value="<%= category.categoryId %>" <%= category.categoryId === event.categoryId ? "selected" : "" %>><%= category.categoryName %></option>
+       <% } %>
+    </select>
+
+
+    <button>Actualizar</button>
+    
+    <a href="/event">Volver</a>
+</form>
+
+<%- include('../layout/footer'); -%>

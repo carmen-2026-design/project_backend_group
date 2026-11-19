@@ -1,0 +1,24 @@
+<%- include('../layout/header', { title: 'Inscripción' }); -%>
+
+<h2>Lista de inscripciones</h2>
+<%- include('../layout/error') -%>
+
+<% if(query ){
+    if(query.error){
+        %>
+        <p class="error"><%= query.error %></p>
+        <%
+    }
+    if(query.message){
+        %>
+        <p class="message"><%= query.message %></p>
+        <%
+    }
+}
+%>
+
+<% for (registration of registrations) { %>
+    <%- include('registrationCard', { registration }) -%>
+<% } %>
+
+<%- include('../layout/footer'); -%>

@@ -1,0 +1,24 @@
+<%- include('../layout/header', { title: 'Categoria' }); -%>
+
+<h2>Lista de categorias</h2>
+<%- include('../layout/error') -%>
+
+<% if(query ){
+    if(query.error){
+        %>
+        <p class="error"><%= query.error %></p>
+        <%
+    }
+    if(query.message){
+        %>
+        <p class="message"><%= query.message %></p>
+        <%
+    }
+}
+%>
+
+
+<% for (category of categories) {%>
+    <%- include('categoryCard',{category}) -%>
+<% } %>
+<%- include('../layout/footer'); -%>

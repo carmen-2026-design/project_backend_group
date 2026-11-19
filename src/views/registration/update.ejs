@@ -1,0 +1,34 @@
+<%- include('../layout/header', { title: 'Inscripción' }); -%>
+
+<h2>Editar inscripción</h2>
+<%- include('../layout/error') -%>
+
+<% if(query ){
+    if(query.error){
+        %>
+        <p class="error"><%= query.error %></p>
+        <%
+    }
+    if(query.message){
+        %>
+        <p class="message"><%= query.message %></p>
+        <%
+    }
+}
+%>
+
+<form action="/registration/<%= registration.registrationId %>/edit" method="post">
+
+    <p>Evento: <strong><%= registration.event?.eventTitle %></strong></p>
+
+    <label for="registrationPeople">Número de personas</label>
+    <input type="number" name="registrationPeople" id="registrationPeople" min="1" max="10"
+        value="<%= registration.registrationPeople %>" required>
+
+    <button>Actualizar</button>
+
+</form>
+
+<a href="/registration/<%= registration.registrationId %>">Volver</a>
+
+<%- include('../layout/footer'); -%>

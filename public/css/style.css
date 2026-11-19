@@ -1,3 +1,472 @@
-header, footer {
+/* header, footer {
     background-color: #ccc;
+}
+
+ */
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --color-principal: #17243a;
+    --color-secundario: #278c83;
+    --color-secundario-hover: #1e716a;
+    --color-fondo: #f3f5f7;
+    --color-blanco: #ffffff;
+    --color-texto: #263244;
+    --color-texto-suave: #718096;
+    --color-borde: #e1e6ed;
+    --color-error: #c94b4b;
+    --sombra: 0 4px 18px rgba(23, 36, 58, 0.07);
+    --radio: 12px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+}
+
+ h1, h2 {
+    text-transform: uppercase;
+    letter-spacing: 0.5px; /* Opcional: mejora un poco la lectura en mayúsculas */
+}
+
+header {
+    background-color: var(--color-principal);
+    color: var(--color-blanco);
+    padding: 22px 7%;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+}
+
+nav {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    height: 34px;
+}
+
+nav h1>a {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+nav h1>a:hover {
+    color: var(--color-blanco);
+}
+
+nav ul {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    list-style: none;
+}
+
+nav a {
+    color: var(--color-blanco);
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+nav a:hover {
+    color: #77c9bd;
+}
+
+body > h2 {
+    width: min(1100px, 86%);
+    margin: 45px auto 25px;
+    color: var(--color-principal);
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+article {
+    width: min(1100px, 86%);
+    margin: 0 auto 20px;
+    padding: 25px;
+    background-color: var(--color-blanco);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+ article:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(23, 36, 58, 0.1);
+}
+
+article.home-card:hover {
+    transform:none;
+    box-shadow: none;
+}
+
+article h3 {
+    margin-bottom: 15px;
+    color: var(--color-principal);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+article p {
+    margin-bottom: 10px;
+    color: var(--color-texto-suave);
+    font-size: 0.95rem;
+}
+
+article a,
+body > a {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--color-secundario);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+article a:hover,
+body > a:hover {
+    color: var(--color-secundario-hover);
+    text-decoration: underline;
+}
+
+form {
+    width: min(600px, 86%);
+    margin: 30px auto;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: var(--color-blanco);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+}
+
+form label {
+    margin-top: 8px;
+    color: var(--color-principal);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 12px 14px;
+    background-color: #fbfcfd;
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    color: var(--color-texto);
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--color-secundario);
+    box-shadow: 0 0 0 3px rgba(39, 140, 131, 0.12);
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+button {
+    width: fit-content;
+    margin-top: 15px;
+    padding: 11px 23px;
+    background-color: var(--color-secundario);
+    color: var(--color-blanco);
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: var(--color-secundario-hover);
+    transform: translateY(-1px);
+}
+
+article form {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+article form button {
+    margin-top: 10px;
+    padding: 9px 17px;
+    background-color: #fceeee;
+    color: var(--color-error);
+}
+
+article form button:hover {
+    background-color: var(--color-error);
+    color: var(--color-blanco);
+}
+
+
+
+form[action$="/edit"] button {
+    background-color:var(--color-fondo);
+    color: var(--color-principal);
+}
+
+form[action$="/edit"] button:hover {
+    background-color: #161e2e;
+    color: #ffffff;
+}
+
+body > a {
+    width: fit-content;
+    margin: 20px 7%;
+}
+
+footer {
+    margin-top: auto;
+    padding: 25px;
+    background-color: var(--color-principal);
+    color: var(--color-blanco);
+    text-align: center;
+}
+
+footer p {
+    color: #c5ceda;
+    font-size: 0.85rem;
+}
+
+
+article:first-of-type {
+    margin-top: 35px;
+}
+
+article {
+    padding: 30px;
+}
+
+article h3 {
+    margin-bottom: 20px;
+}
+
+/* Contenedor principal que centra el article en medio de la pantalla */
+.home-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 150px); /* Ajusta el alto restando header y footer */
+/*     padding: 1rem;
+ */    background-color: #f4f6f9; /* Fondo claro suave para contrastar con el card */
+}
+
+/* Tarjeta central (Article) acorde a la paleta de tu navbar */
+.home-card {
+    background-color: #161e2e; /* Mismo tono azul marino oscuro de tu header */
+    color: #ffffff;
+    padding: 3.5rem 4.5rem;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 550px;
+    width: 100%;
+    box-shadow: 0 10px 25px rgba(22, 30, 46, 0.25);
+/*     border: 4px solid #38bdf8;
+ */    transition: transform 0.3s ease, box-shadow 0.3s ease;
+ 
+}
+
+/* Título principal */
+.home-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    letter-spacing: 1px;
+    color: #ffffff;
+}
+
+/* Subtítulo */
+.home-subtitle {
+    font-size: 1.55rem;
+    font-weight: 400;
+    margin: 0;
+    color: #cbd5e1; /* Gris azulado claro para buena lectura */
+    line-height: 1.5;
+}
+
+
+footer {
+    margin-top: auto;
+    font-size: 1.05rem;   /* Aumenta un poco el tamaño de la letra (por defecto suele ser 1rem / 16px) */
+    font-weight: 500;     /* Le da un grosor medio para que destaque más sin llegar a ser negrita pesada */
+    letter-spacing: 0.3px; /* Separa ligeramente las letras para mejorar la lectura sobre fondo oscuro */
+}
+
+/* Estilos compartidos para ambas alertas */
+p.error, p.message {
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    margin: 0 auto 1.5rem 26rem;
+    max-width: 800px;
+    width: 90%;
+    font-size: 0.95rem;
+    font-weight: 500;
+    box-sizing: border-box;
+    margin-top: 2rem;
+}
+
+/* Alerta de error (rojo suave acorde a tus tarjetas) */
+p.error {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    border: 1px solid #ef4444;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.08);
+}
+
+/* Alerta de éxito/mensaje informativo (verde/azul suave) */
+p.message {
+    background-color: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    border: 1px solid #22c55e;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.08);
+}
+
+
+@media (max-width: 768px) {
+    header {
+        padding: 20px 5%;
+    }
+
+    nav {
+/*         flex-direction: column;
+ */        align-items: center;
+        gap: 15px;
+                justify-content: space-between;
+    }
+
+    nav ul {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    body > h2 {
+        margin-top: 30px;
+        font-size: 1.5rem;
+    }
+
+    article {
+        padding: 20px;
+    }
+
+    form {
+        padding: 22px;
+    }
+}
+
+/* ------------Menú de usuario logeado ---------*/
+/* Posicionamiento relativo en el elemento padre */
+.user-menu {
+    position: relative;
+    cursor: pointer;
+}
+
+.user-info {
+    display: inline-block;
+    padding: 8px 12px;
+}
+
+/* Submenú oculto por defecto */
+.user-menu .dropdown {
+    display: none;
+    position: absolute;
+    right: 0; /* Lo alinea a la derecha para que no se salga de la pantalla */
+    top: 100%;
+    background-color: #ffffff; /* Cambia el color según el tema de tu web */
+    min-width: 180px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    padding: 0;
+    list-style: none;
+    z-index: 1000;
+}
+
+/* Mostrar el submenú al pasar el cursor por encima */
+.user-menu:hover .dropdown {
+    display: block;
+}
+
+/* Estilos de los enlaces dentro del submenú */
+.user-menu .dropdown li {
+    width: 100%;
+    margin: 0;
+}
+
+.user-menu .dropdown li a {
+    display: block;
+    padding: 10px 15px;
+    color: #333333;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.user-menu .dropdown li a:hover {
+    background-color: #f0f0f0;
+}
+
+@media (max-width: 480px) {
+    nav h1 {
+        font-size: 1.25rem;
+    }
+
+    nav ul {
+        gap: 12px;
+    }
+
+    article {
+        padding: 17px;
+    }
+
+    form {
+        padding: 18px;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    article form button {
+        width: auto;
+    }
 }
